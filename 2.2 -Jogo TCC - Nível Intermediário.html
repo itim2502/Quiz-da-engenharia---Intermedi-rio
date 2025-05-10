@@ -1,0 +1,2982 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz da Engenharia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .category-btn {
+      color: black;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .btn-construcao {
+      background-color: #d73ed7;
+    }
+    .btn-estruturas {
+      background-color: #e24f4f;
+    }
+    .btn-geotecnia {
+      background-color: #a38047;
+    }
+    .btn-hidricos {
+      background-color: #59d9d9;
+      color: black;
+    }
+    .btn-transportes {
+      background-color: #96e296;
+    }
+    .draw-btn, .show-answer-btn {
+      background-color: #d3d3d3;
+      color: black;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .draw-btn:hover, .show-answer-btn:hover {
+      background-color: #a9a9a9;
+    }
+    .question-box {
+      background: white; /* Cor padrão */
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      white-space: pre-line;
+      text-align: left;
+      transition: background-color 0.3s ease;
+    }
+    /* Cores por categoria */
+    .construcao-bg {
+      background-color: #d73ed7; /* Roxo claro */
+    }
+    .estruturas-bg {
+      background-color: #e24f4f; /* Vermelho claro */
+    }
+    .geotecnia-bg {
+      background-color: #a38047; /* Marrom claro */
+    }
+    .hidricos-bg {
+      background-color: #59d9d9; /* Azul claro */
+    }
+    .transportes-bg {
+      background-color: #96e296; /* Verde claro */
+    }
+    #questionText {
+      margin-bottom: 15px;
+    }
+    #answerText {
+      font-weight: bold;
+      color: #006400;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <!-- O resto do seu HTML permanece o mesmo -->
+  <h1>QUIZ DA ENGENHARIA CIVIL - Nível Intermediário</h1>
+  <p>Escolha uma categoria:</p>
+  <div>
+    <button class="category-btn btn-construcao" onclick="selectCategory('construcao')">Construção Civil</button>
+    <button class="category-btn btn-estruturas" onclick="selectCategory('estruturas')">Estruturas</button>
+    <button class="category-btn btn-geotecnia" onclick="selectCategory('geotecnia')">Geotecnia</button>
+    <button class="category-btn btn-hidricos" onclick="selectCategory('hidricos')">Recursos Hídricos</button>
+    <button class="category-btn btn-transportes" onclick="selectCategory('transportes')">Transportes</button>
+  </div>
+
+  <div>
+    <button class="draw-btn" onclick="drawQuestion()">Sortear Pergunta</button>
+    <button class="show-answer-btn" onclick="showAnswer()">Mostrar Resposta</button>
+  </div>
+
+  <div class="question-box" id="questionBox">
+    <h2 id="questionTitle">Nenhuma pergunta ainda</h2>
+    <p id="questionText">Escolha uma categoria e clique em "Sortear Pergunta".</p>
+    <p id="answerText" style="display:none;"></p>
+  </div>
+
+  <script>
+    const questions = {
+      construcao: [
+        {
+          pergunta: `Qual é a principal função do concreto na construção civil?
+a) Suportar esforços de tração
+b) Suportar esforços de compressão com resistência e durabilidade
+c) Isolamento térmico
+d) Decorar estruturas`,
+          resposta: "b) Suportar esforços de compressão com resistência e durabilidade"
+        },
+        {
+          pergunta: `A argamassa é geralmente composta por quais materiais principais?
+a) Cimento, areia e água
+b) Concreto e brita
+c) Cal e pedra
+d) Gesso e fibra`,
+          resposta: "a) Cimento, areia e água"
+        },
+        {
+          pergunta: `Durante o planejamento de um projeto de revestimento cerâmico em uma construção, é essencial entender os materiais utilizados desde a base até o acabamento. Nesse contexto, qual é a matéria-prima essencial para a produção de cerâmica?
+a) Areia
+b) Argila
+c) Cimento
+d) Vidro`,
+          resposta: "b) Argila"
+        },
+        {
+          pergunta: `Em obras de alvenaria, a escolha adequada dos materiais influencia diretamente a durabilidade, estabilidade e eficiência térmica e acústica das construções. A NBR 15270-1:2017 define critérios técnicos para um desses materiais, que é amplamente utilizado em paredes de vedação e estruturais. De acordo com essa norma, qual é a definição correta de blocos cerâmicos?
+a) Elementos pré-moldados de concreto, utilizados exclusivamente em fundações
+b) Elementos de alvenaria moldados em argila e queimados em forno, destinados à construção de paredes estruturais ou de vedação
+c) Peças metálicas vazadas, aplicadas em estruturas de cobertura
+d) Componentes plásticos modulares, usados em divisórias internas`,
+          resposta: "b) Elementos de alvenaria moldados em argila e queimados em forno, destinados à construção de paredes estruturais ou de vedação"
+        },
+        {
+          pergunta: `Ao especificar revestimentos cerâmicos para o piso de um shopping center, o engenheiro civil deve considerar o tráfego intenso de pessoas. Nesse caso, o PEI é um parâmetro crucial para garantir a durabilidade do material. Mas o que exatamente significa o PEI em revestimentos cerâmicos?
+a) Índice de absorção de água
+b) Classificação da resistência à abrasão
+c) Medida de condutividade térmica
+d) Indicador de resistência a produtos químicos`,
+          resposta: "b) Classificação da resistência à abrasão"
+        },
+        {
+          pergunta: `Em um projeto de revestimento de fachada ventilada com cerâmicas, a escolha adequada do rejunte é essencial para evitar infiltrações e danos às placas ao longo do tempo. Qual é a função principal desse componente no sistema?
+a) Aumentar a absorção de água
+b) Proteger as arestas das peças cerâmicas e impermeabilizar
+c) Reduzir a resistência mecânica
+d) Aumentar a porosidade do material`,
+          resposta: "b) Proteger as arestas das peças cerâmicas e impermeabilizar"
+        },
+        {
+          pergunta: `Durante o assentamento de cerâmicas 30x30 cm em um piso residencial, o mestre de obras deve respeitar as normas técnicas para evitar trincas por dilatação térmica ou movimentação estrutural. Qual é a espessura recomendada para as juntas de assentamento nesse caso?
+a) 1 mm
+b) 2 mm
+c) 3 mm a 5 mm
+d) 10 mm`,
+          resposta: "c) 3 mm a 5 mm"
+        },
+        {
+          pergunta: `Na fabricação de móveis embutidos para um projeto de arquitetura sustentável, optou-se pelo uso de MDF devido à sua uniformidade e custo-benefício. Qual processo industrial é utilizado para produzir esse tipo de painel?
+a) Torneamento
+b) Aglomeração de fibras com resina sintética
+c) Laminação a quente
+d) Extrusão`,
+          resposta: "b) Aglomeração de fibras com resina sintética"
+        },
+        {
+          pergunta: `Ao projetar uma estrutura metálica para um edifício em região costeira, o engenheiro deve avaliar os fatores que aceleram a corrosão dos materiais. Dentre as opções abaixo, qual NÃO representa um risco para a durabilidade do aço exposto?
+a) Presença de cloretos (ex.: maresia)
+b) Umidade relativa do ar acima de 60%
+c) Pintura com primer epóxi e acabamento em poliuretano
+d) Poluição por SO₂ (dióxido de enxofre)`,
+          resposta: "c) Pintura com primer epóxi e acabamento em poliuretano"
+        },
+        {
+          pergunta: `Na execução de uma laje de concreto armado para um hospital, a equipe de qualidade verifica o cobrimento das armaduras conforme a NBR 6118. Qual é a finalidade primordial dessa exigência normativa?
+a) Aumentar a condutividade elétrica
+b) Proteger a armadura contra a corrosão
+c) Reduzir a resistência mecânica
+d) Aumentar a absorção de água`,
+          resposta: "b) Proteger a armadura contra a corrosão"
+        },
+        {
+          pergunta: `Durante a preparação de uma parede para receber revestimento cerâmico, o chapisco é aplicado para garantir a aderência da argamassa de assentamento. Qual característica esse procedimento confere à superfície?
+a) Regularizar a superfície
+b) Aumentar a rugosidade superficial
+c) Reduzir a aderência da argamassa
+d) Aumentar a absorção de água`,
+          resposta: "b) Aumentar a rugosidade superficial"
+        },
+        {
+          pergunta: `Durante o assentamento de cerâmicas em um projeto de reforma, o engenheiro supervisiona o uso correto dos espaçadores plásticos. Qual é a principal função desses acessórios no processo?
+a) Aumentar a absorção de água
+b) Garantir a largura das juntas de assentamento
+c) Reduzir a resistência mecânica
+d) Aumentar a porosidade do material`,
+          resposta: "b) Garantir a largura das juntas de assentamento"
+        },
+        {
+          pergunta: `Ao especificar o aço para as vigas de um edifício residencial, o projetista optou pelo CA-50. Qual característica distintiva desse tipo de aço garante melhor aderência ao concreto?
+a) Superfície lisa
+b) Nervuras transversais para aumentar a aderência
+c) Baixo teor de carbono
+d) Uso exclusivo em estruturas navais`,
+          resposta: "b) Nervuras transversais para aumentar a aderência"
+        },
+        {
+          pergunta: `Em um projeto de revestimento de piscina, a seleção do rejunte adequado é crucial para evitar infiltrações. Qual sua função principal nesse sistema?
+a) Aumentar a absorção de água
+b) Proteger as arestas das peças cerâmicas e impermeabilizar
+c) Reduzir a resistência mecânica
+d) Aumentar a porosidade do material`,
+          resposta: "b) Proteger as arestas das peças cerâmicas e impermeabilizar"
+        },
+        {
+          pergunta: `Ao selecionar materiais para tubos flexíveis em uma obra, o engenheiro considerou polímeros termoplásticos. Qual propriedade fundamental desses materiais permite sua reciclagem?
+a) Não podem ser reciclados
+b) Amolecem com o calor e podem ser remodelados
+c) São quebradiços após a moldagem
+d) Não são utilizados na construção civil`,
+          resposta: "b) Amolecem com o calor e podem ser remodelados"
+        },
+        {
+          pergunta: `Para as instalações hidráulicas de um condomínio, foi especificado um material leve e resistente à corrosão. Qual polímero é mais adequado para essas tubulações?
+a) Polietileno (PE)
+b) Policarbonato (PC)
+c) Poliestireno (PS)
+d) Polipropileno (PP)`,
+          resposta: "a) Polietileno (PE)"
+        },
+        {
+          pergunta: `Na escolha de materiais para divisórias leves, os polímeros se destacam por uma vantagem específica. Qual é ela?
+a) Alta resistência à tração
+b) Baixo custo e facilidade de moldagem
+c) Resistência ao fogo
+d) Peso elevado`,
+          resposta: "b) Baixo custo e facilidade de moldagem"
+        },
+        {
+          pergunta: `Para a cobertura translúcida de um galpão industrial, foi selecionado um material resistente a impactos. Qual polímero atende a essa necessidade?
+a) PVC
+b) Policarbonato (PC)
+c) Polietileno (PE)
+d) Poliestireno (PS)`,
+          resposta: "b) Policarbonato (PC)"
+        },
+        {
+          pergunta: `Na pintura das fachadas de um edifício comercial, qual é a dupla função esperada das tintas?
+a) Apenas decorativa
+b) Proteção e decoração das superfícies
+c) Isolamento térmico
+d) Aumentar a resistência estrutural`,
+          resposta: "b) Proteção e decoração das superfícies"
+        },
+        {
+          pergunta: `Para as paredes de um banheiro de alto tráfego, qual tipo de tinta oferece melhor resistência à umidade?
+a) Tinta látex PVA
+b) Tinta acrílica
+c) Tinta esmalte
+d) Tinta epóxi`,
+          resposta: "b) Tinta acrílica"
+        },
+        {
+          pergunta: `Na manutenção de uma estrutura metálica externa, qual tinta proporciona maior durabilidade contra corrosão?
+a) Tinta látex
+b) Tinta acrílica
+c) Tinta esmalte
+d) Tinta à base de cal`,
+          resposta: "c) Tinta esmalte"
+        },
+        {
+          pergunta: `Durante a fabricação de vidros para as esquadrias de um edifício, qual componente representa cerca de 70% da matéria-prima?
+a) Calcário
+b) Sílica (óxido de silício)
+c) Barrilha
+d) Feldspato`,
+          resposta: "b) Sílica (óxido de silício)"
+        },
+        {
+          pergunta: `Ao especificar o vidro para as portas de um shopping center, o engenheiro priorizou a segurança dos usuários. Qual tipo de vidro, ao se quebrar, forma fragmentos menos cortantes e reduz riscos de ferimentos?
+a) Vidro temperado
+b) Vidro laminado
+c) Vidro aramado
+d) Vidro float`,
+          resposta: "a) Vidro temperado"
+        },
+        {
+          pergunta: `Para as janelas de um edifício em área sujeita a furacões, foi selecionado um vidro com camadas internas que impedem a projeção de estilhaços. Qual é a principal vantagem desse sistema?
+a) Maior resistência ao impacto
+b) Fragmentação em pedaços grandes
+c) Baixo custo de produção
+d) Facilidade de corte após a fabricação`,
+          resposta: "a) Maior resistência ao impacto"
+        },
+        {
+          pergunta: `Durante a pavimentação de uma rodovia, a equipe técnica debateu as diferenças entre materiais betuminosos. Qual é a distinção fundamental entre asfalto e alcatrão?
+a) O asfalto é derivado do petróleo, enquanto o alcatrão é derivado do carvão
+b) O alcatrão é mais resistente à temperatura
+c) O asfalto não contém betume
+d) O alcatrão é mais utilizado na pavimentação`,
+          resposta: "a) O asfalto é derivado do petróleo, enquanto o alcatrão é derivado do carvão"
+        },
+        {
+          pergunta: `Em uma obra de recapeamento em região urbana, optou-se por usar emulsões asfálticas. Qual é a principal aplicação desse material?
+a) Impermeabilização de telhados
+b) Pavimentação a frio
+c) Fabricação de mantas asfálticas
+d) Isolamento térmico`,
+          resposta: "b) Pavimentação a frio"
+        },
+        {
+          pergunta: `Ao analisar a composição do ligante asfáltico para uma rodovia, o engenheiro identificou o CAP. O que representa esse material?
+a) Um tipo de emulsão asfáltica
+b) Um resíduo da destilação do petróleo
+c) Um tipo de alcatrão
+d) Um aditivo para concreto`,
+          resposta: "b) Um resíduo da destilação do petróleo"
+        },
+        {
+          pergunta: `Para um trecho de rodovia com tráfego intenso de caminhões, foi especificado asfalto modificado com polímeros. Qual benefício essa tecnologia proporciona?
+a) Menor custo de produção
+b) Maior resistência à deformação permanente
+c) Facilidade de aplicação a frio
+d) Menor durabilidade`,
+          resposta: "b) Maior resistência à deformação permanente"
+        },
+        {
+          pergunta: `Ao projetar a instalação elétrica de um apartamento, o engenheiro seguiu a NBR 5410. Qual é a potência mínima que deve ser prevista para cada ponto de luz em cômodos residenciais?
+a) 50 VA
+b) 100 VA
+c) 150 VA
+d) 200 VA`,
+          resposta: "b) 100 VA"
+        },
+        {
+          pergunta: `No projeto elétrico de uma cozinha residencial, quantas tomadas de uso geral devem ser instaladas por metro linear de bancada, conforme a norma técnica?
+a) 1 ponto a cada 2,0 m
+b) 1 ponto a cada 3,5 m
+c) 1 ponto a cada 4,0 m
+d) 1 ponto a cada 5,0 m`,
+          resposta: "b) 1 ponto a cada 3,5 m"
+        },
+        {
+          pergunta: `Durante a execução da instalação elétrica de uma residência, qual é a seção mínima dos fios que pode ser utilizada nos circuitos de iluminação, de acordo com a NBR 5410?
+a) 1,0 mm²
+b) 1,5 mm²
+c) 2,5 mm²
+d) 4,0 mm²`,
+          resposta: "b) 1,5 mm²"
+        },
+        {
+          pergunta: `Ao projetar o sistema de iluminação de um escritório, o engenheiro precisa especificar os níveis adequados de iluminamento para garantir conforto visual. Qual unidade é utilizada para medir essa grandeza fotométrica?
+a) Lúmen
+b) Lux
+c) Candela
+d) Watt`,
+          resposta: "b) Lux"
+        },
+        {
+          pergunta: `Em uma usina hidrelétrica, o sistema de transmissão requer equipamentos específicos para reduzir perdas de energia. Qual a função principal do transformador instalado próximo à geração?
+a) Reduzir a tensão para distribuição
+b) Elevar a tensão para transmissão
+c) Converter corrente contínua em alternada
+d) Estabilizar a frequência da rede`,
+          resposta: "b) Elevar a tensão para transmissão"
+        },
+        {
+          pergunta: `Ao dimensionar a entrada de energia para um edifício residencial de médio porte, qual é a tensão trifásica padrão fornecida pelas concessionárias?
+a) 127 V
+b) 220 V
+c) 380 V
+d) 440 V`,
+          resposta: "c) 380 V"
+        },
+        {
+          pergunta: `No planejamento inicial de uma construção, quais atividades compõem os serviços preliminares essenciais?
+a) Concretagem dos Pilares
+b) Locação da obra
+c) Serviços de acabamento e revestimento
+d) Instalações elétricas e hidrossanitárias`,
+          resposta: "b) Locação da obra"
+        },
+        {
+          pergunta: `Durante o planejamento logístico de uma obra, como é definido o canteiro de obras na NR-18?
+a) Área de trabalho fixa e temporária onde se desenvolvem as operações de apoio e execução de uma obra
+b) Local de armazenamento de materiais de acabamento
+c) Área destinada apenas à administração da obra
+d) Local de vivência dos trabalhadores`,
+          resposta: "a) Área de trabalho fixa e temporária onde se desenvolvem as operações de apoio e execução de uma obra"
+        },
+        {
+          pergunta: `Para garantir a segurança perimetral em um canteiro de obras urbano, qual é a altura mínima exigida para o tapume?
+a) 1,50 m
+b) 2,00 m
+c) 2,50 m
+d) 3,00 m`,
+          resposta: "c) 2,50 m"
+        },
+        {
+          pergunta: `Na fase inicial de uma construção, qual processo consiste em transpor o projeto do papel para o terreno?
+a) Transferir para o terreno o que foi projetado em escala reduzida
+b) Realizar o levantamento topográfico do terreno
+c) Executar as fundações da edificação
+d) Definir o projeto estrutural`,
+          resposta: "a) Transferir para o terreno o que foi projetado em escala reduzida"
+        },
+        {
+          pergunta: `Durante a locação de uma obra, qual é a principal utilidade do gabarito?
+a) Definir a altura da edificação
+b) Marcar os eixos e referências da construção no terreno
+c) Realizar o nivelamento do terreno
+d) Executar as escavações`,
+          resposta: "b) Marcar os eixos e referências da construção no terreno"
+        },
+        {
+          pergunta: `Em obras de pequeno porte, qual método tradicional de locação utiliza tábuas niveladas e em esquadro?
+a) Processo dos cavaletes
+b) Processo da tábua corrida
+c) Método do triângulo retângulo
+d) Método do teodolito`,
+          resposta: "b) Processo da tábua corrida"
+        },
+        {
+          pergunta: `Em um solo com boa capacidade de carga, qual tipo de fundação transmite esforços diretamente pela base?
+a) Fundações que transmitem as cargas ao solo por atrito lateral
+b) Fundações que transmitem as cargas ao solo pela base do elemento estrutural
+c) Fundações que utilizam estacas para transmitir as cargas
+d) Fundações que são sempre profundas`,
+          resposta: "b) Fundações que transmitem as cargas ao solo pela base do elemento estrutural"
+        },
+        {
+          pergunta: `Em uma construção com fundação em sapatas, qual é a função estrutural da viga baldrame?
+a) Absorver esforços de tração
+b) Distribuir o carregamento e combater esforços horizontais
+c) Servir como base para as paredes
+d) Aumentar a resistência do solo`,
+          resposta: "b) Distribuir o carregamento e combater esforços horizontais"
+        },
+        {
+          pergunta: `Em um projeto de edifício residencial onde dois pilares estruturais estão posicionados a apenas 1,2m de distância um do outro, criando interferência entre as áreas de influência de suas sapatas, qual tipo de fundação deve ser especificado para garantir a distribuição adequada de cargas?
+a) Sapata isolada
+b) Sapata corrida
+c) Sapata associada
+d) Sapata alavancada`,
+          resposta: "c) Sapata associada"
+        },
+        {
+          pergunta: `Ao projetar uma torre comercial em área de solo argiloso mole com SPT entre 2 e 4 golpes, onde a capacidade de carga superficial é insuficiente, o engenheiro optou por fundações profundas. Como esse tipo de fundação transmite predominantemente os esforços para o subsolo?
+a) Fundações que transmitem as cargas ao solo pela base
+b) Fundações que transmitem as cargas ao solo por atrito lateral e efeito de ponta
+c) Fundações que são sempre rasas
+d) Fundações que utilizam apenas concreto armado`,
+          resposta: "b) Fundações que transmitem as cargas ao solo por atrito lateral e efeito de ponta"
+        },
+        {
+          pergunta: `Durante a execução de fundações para um hospital em terreno arenoso úmido, a equipe técnica está realizando tubulões a céu aberto com revestimento de concreto. Qual é o principal risco ocupacional que exige medidas especiais de proteção?
+a) Vibração excessiva
+b) Soterramento de trabalhadores
+c) Corrosão das armaduras
+d) Desmoronamento do solo`,
+          resposta: "b) Soterramento de trabalhadores"
+        },
+        {
+          pergunta: `Em uma obra temporária de ponte em área de mangue, onde há necessidade de fundações rápidas e econômicas, porém com alta umidade e ação de organismos xilófagos, qual seria a principal limitação das estacas pré-moldadas de madeira?
+a) Baixa durabilidade
+b) Alto custo
+c) Limitação pelo nível d'água
+d) Dificuldade de cravação`,
+          resposta: "a) Baixa durabilidade"
+        },
+        {
+          pergunta: `Na construção de um galpão industrial com carga pesada, onde foi adotado um sistema de fundação por estacas pré-moldadas de concreto com bloco de coroamento, qual é a função estrutural primordial desse elemento?
+a) Transferir as cargas da superestrutura para as estacas
+b) Aumentar a resistência do solo
+c) Servir como base para as paredes
+d) Reduzir o recalque diferencial`,
+          resposta: "a) Transferir as cargas da superestrutura para as estacas"
+        },
+        {
+          pergunta: `Durante a execução de uma estrutura de concreto aparente em região de clima quente e seco, quais procedimentos de cura são essenciais nos primeiros 7 dias para garantir a hidratação completa do cimento e evitar fissuras?
+a) Evitar a retração hidráulica e garantir a hidratação do cimento
+b) Aumentar a resistência à tração
+c) Reduzir o peso da estrutura
+d) Melhorar a aparência do concreto`,
+          resposta: "a) Evitar a retração hidráulica e garantir a hidratação do cimento"
+        },
+        {
+          pergunta: `Na concretagem de uma viga de 60cm de altura com armadura densa, qual equipamento e técnica devem ser utilizados para garantir perfeito adensamento e eliminação de bolhas de ar prejudiciais à resistência?
+a) Retirar o ar presente na massa do concreto
+b) Aumentar a resistência à compressão
+c) Reduzir o tempo de cura
+d) Melhorar a aparência do concreto`,
+          resposta: "a) Retirar o ar presente na massa do concreto"
+        },
+        {
+          pergunta: `Ao comparar sistemas estruturais para um edifício de 30 pavimentos, qual característica do concreto armado impõe desafios especiais no dimensionamento das fundações e exige atenção aos recalques?
+a) Elevado peso próprio
+b) Baixa resistência à compressão
+c) Facilidade de reformas
+d) Baixo custo de fôrmas`,
+          resposta: "a) Elevado peso próprio"
+        },
+        {
+          pergunta: `No projeto de um hospital com requisitos específicos de compartimentação de ambientes, qual é a função primordial das paredes divisórias internas além da simples separação física dos espaços?
+a) Definir e limitar verticalmente o edifício e seus ambientes internos
+b) Servir como estrutura principal do edifício
+c) Apenas fornecer isolamento térmico
+d) Apenas fornecer isolamento acústico`,
+          resposta: "a) Definir e limitar verticalmente o edifício e seus ambientes internos"
+        },
+        {
+          pergunta: `Em uma parede de alvenaria estrutural com abertura para porta de 2,10m, qual elemento deve ser obrigatoriamente executado acima do vão para absorver as cargas da alvenaria superior e evitar fissuras?
+a) Absorver tensões de tração
+b) Controlar a passagem de água
+c) Isolar termicamente
+d) Apenas decorar a parede`,
+          resposta: "a) Absorver tensões de tração"
+        },
+{
+          pergunta: `Situação problema: Escolha de vidros para uma obra
+Você está em uma obra onde irá começar a instalação dos vidros, o memorial descritivo não especifica qual tipo de vidro deverá ser utilizado:
+1) Janela do quarto
+2) Guarda corpo
+3) Vidros localizados em portas corta-fogo
+
+Tendo os seguintes tipos de vidro disponíveis:
+1) Recozido
+2) Temperado
+3) Laminado
+4) Aramado
+
+Portanto defina qual é o tipo mais adequado justificando com base na economia e na aplicabilidade.`,
+          resposta: " "
+        },
+        {
+          pergunta: `Situação Problema: Implantação do Canteiro de Obras
+Uma obra está sendo iniciada em um terreno com espaço limitado e interferências de infraestrutura urbana (redes de água, energia). Como otimizar a implantação do canteiro de obras para garantir segurança, produtividade e atendimento às normas?`,
+          resposta: " "
+        },
+        {
+          pergunta: `Situação Problema: Locação de Obras com Falta de Equipamentos Topográficos
+Em uma obra rural, não há teodolitos ou níveis disponíveis. Como você poderia realizar a locação dos eixos da edificação da forma mais precisa possível?`,
+          resposta: " "
+        },
+        {
+          pergunta: `Situação Problema: Problemas com Estoque de Materiais no Canteiro
+O estoque de cimento do canteiro de obra está exposto à umidade, e o de areia sofre carreamento pela chuva. A partir disso como você poderia atuar para resolver o problema?`,
+          resposta: " "
+        },
+        {
+          pergunta: `Situação Problema: Escolha entre Alvenaria Estrutural e Drywall
+Um projeto residencial exige rapidez de execução e cuidado nas escolhas dos materiais, durante a concepção de um projeto residencial ao qual você foi contratado surgiram dúvidas entre a utilização de alvenaria estrutural (blocos de concreto) e drywall para as paredes dessa residência. Quais critérios irá considerar para a escolha?`,
+          resposta: ""
+        },
+{
+    pergunta: `Ao elaborar o projeto hidrossanitário de um edifício residencial de médio porte, o engenheiro precisa seguir as diretrizes da norma que estabelece os requisitos mínimos para garantir a qualidade e segurança das instalações de água potável. Qual é o objetivo principal da NBR 5626?
+A) Estabelecer normas para instalações elétricas em edifícios.
+B) Definir requisitos para projetos de combate a incêndio.
+C) Regular o projeto, execução e manutenção de instalações prediais de água fria.
+D) Normatizar sistemas de esgoto sanitário.`,
+    resposta: "C) Regular o projeto, execução e manutenção de instalações prediais de água fria."
+  },
+  {
+    pergunta: `Durante a análise de um projeto de reforma de instalações hidráulicas, o técnico precisa classificar corretamente os sistemas conforme a temperatura da água. Como a NBR 5626 define especificamente o conceito de "água fria" em instalações prediais?
+A) Água resfriada artificialmente por sistemas mecânicos.
+B) Água mantida naturalmente em temperatura ambiente, sem tratamento térmico.
+C) Água com temperatura consistentemente abaixo de 10°C.
+D) Água armazenada exclusivamente em reservatórios subterrâneos.`,
+    resposta: "B) Água mantida naturalmente em temperatura ambiente, sem tratamento térmico."
+  },
+  {
+    pergunta: `Ao dimensionar as tubulações de água fria para um hotel de 15 andares, o engenheiro deve limitar a velocidade da água para evitar problemas operacionais. Qual é o valor máximo recomendado pela norma para velocidade da água nessas tubulações, considerando aspectos como ruído hidráulico e durabilidade do sistema?
+A) 1 m/s (recomendado para ramais de alimentação)
+B) 5 m/s (aceitável apenas em casos especiais)
+C) 3 m/s (limite superior para evitar problemas)
+D) 10 m/s (para sistemas de alta pressão)`,
+    resposta: "C) 3 m/s (limite superior para evitar problemas)"
+  },
+  {
+    pergunta: `Na inspeção de um sistema hidráulico predial, o profissional identifica a tubulação principal que faz a distribuição da água do reservatório superior para as diversas colunas verticais. Qual é o nome técnico correto desse componente essencial do sistema de distribuição?
+A) Um tipo especial de válvula redutora de pressão.
+B) A tubulação mestra que alimenta as colunas de distribuição.
+C) Um dispositivo anti-refluxo de segurança.
+D) Um reservatório auxiliar de equalização.`,
+    resposta: "B) A tubulação mestra que alimenta as colunas de distribuição."
+  },
+  {
+    pergunta: `Durante uma vistoria em uma indústria alimentícia, é identificada uma interligação inadequada entre a rede de água potável e um sistema de água de reúso não tratada. Qual termo técnico a NBR 5626 utiliza para classificar essa situação potencialmente perigosa?
+A) Junta heterogênea entre materiais.
+B) Conexão cruzada entre sistemas de qualidade diferente.
+C) Válvula de retenção deficiente.
+D) Dispositivo de controle de vazão inadequado.`,
+    resposta: "B) Conexão cruzada entre sistemas de qualidade diferente."
+  },
+  {
+    pergunta: `Para um sistema de abastecimento direto (sem reservatório) em um prédio comercial, qual conjunto de dispositivos deve ser obrigatoriamente instalado junto ao hidrômetro para proteger a rede pública contra contaminação por retrossifonagem?
+A) Conjunto completo com válvula de retenção e quebrador de vácuo.
+B) Reservatório de equalização em fibrocimento.
+C) Tubulação de extravasão com grelha.
+D) Válvula de descarga rápida.`,
+    resposta: "A) Conjunto completo com válvula de retenção e quebrador de vácuo."
+  },
+  {
+    pergunta: `Em um reservatório superior de um condomínio residencial, qual componente tem a função específica de alertar os moradores sobre mau funcionamento do sistema de controle de nível, antes que ocorra transbordamento?
+A) Tubo extravasor principal.
+B) Tubulação de aviso paralela ao extravasor.
+C) Dispositivo de limpeza automática.
+D) Alimentador principal da rede.`,
+    resposta: "B) Tubulação de aviso paralela ao extravasor."
+  },
+  {
+    pergunta: `Durante a reforma de um prédio histórico, são encontradas tubulações antigas que precisam ser substituídas. Qual material, comum em instalações antigas, é expressamente proibido pela NBR 5626 em novas instalações devido aos riscos de contaminação por chumbo?
+A) Tubos de cobre com solda prateada.
+B) PVC rígido certificado.
+C) Tubos de chumbo e ligas.
+D) Polipropileno copolímero.`,
+    resposta: "C) Tubos de chumbo e ligas."
+  },
+  {
+    pergunta: `No dimensionamento do sistema de recalque para uma residência unifamiliar com reservatório de 1000 litros, qual deve ser o tempo máximo de operação da bomba para o enchimento completo, conforme recomendações da norma?
+A) 6 horas (para sistemas econômicos)
+B) 3 horas (para consumo moderado)
+C) 1 hora (tempo mínimo recomendado)
+D) 30 minutos (para sistemas pressurizados)`,
+    resposta: "C) 1 hora (tempo mínimo recomendado)"
+  },
+  {
+    pergunta: `Em uma auditoria sanitária em um hospital, quais medidas são consideradas essenciais para manter a potabilidade da água nos reservatórios superiores, conforme exigências da NBR 5626?
+A) Supercloração periódica da água.
+B) Vedação hermética e isolamento de redes não potáveis.
+C) Uso exclusivo de tubulações de cobre.
+D) Instalação de reservatórios totalmente enterrados.`,
+    resposta: "B) Vedação hermética e isolamento de redes não potáveis."
+  },
+  {
+    pergunta: `Em um projeto de manutenção predial de um edifício comercial com reservatório de 50.000 litros, a equipe técnica precisa realizar a limpeza semestral conforme exigências sanitárias. Neste contexto, qual componente do sistema hidráulico é especificamente projetado para permitir o esvaziamento completo do reservatório, facilitando a remoção de sedimentos e a desinfecção das paredes internas?
+A) Alimentar a rede de distribuição.
+B) Permitir o esvaziamento completo para manutenção.
+C) Controlar o nível de água.
+D) Ventilar o reservatório.`,
+    resposta: "B) Permitir o esvaziamento completo para manutenção."
+  },
+  {
+    pergunta: `Durante a execução de redes subterrâneas em um condomínio residencial, onde as tubulações de água fria precisam cruzar com a rede de esgoto sanitário, qual disposição construtiva deve ser rigorosamente observada para prevenir riscos de contaminação da água potável, conforme estabelecem as normas técnicas?
+A) Manter a tubulação de água fria 30 cm acima da de esgoto.
+B) Usar revestimento betuminoso.
+C) Evitar tubos de PVC.
+D) Instalar válvulas de retenção.`,
+    resposta: "A) Manter a tubulação de água fria 30 cm acima da de esgoto."
+  },
+  {
+    pergunta: `Em um hotel de luxo onde o conforto acústico é prioritário, o sistema hidráulico metálico está causando ruídos excessivos nas paredes das suítes. Qual solução técnica, compatível com as boas práticas da engenharia hidráulica, pode ser implementada para mitigar efetivamente essa problemática?
+A) Aumentar a velocidade da água.
+B) Usar isoladores de vibração.
+C) Instalar tubulações embutidas sem proteção.
+D) Utilizar registros de gaveta.`,
+    resposta: "B) Usar isoladores de vibração."
+  },
+  {
+    pergunta: `Em um projeto de reabilitação da cobertura de um hospital, o engenheiro está especificando o sistema de impermeabilização. Neste contexto técnico, qual é a função primordial que o sistema deve desempenhar para garantir a proteção adequada da estrutura e dos ambientes internos?
+a) Melhorar a estética da construção
+b) Conferir estanqueidade a partes da construção
+c) Reduzir o custo da obra
+d) Aumentar a altura da estrutura`,
+    resposta: "b) Conferir estanqueidade a partes da construção"
+  },
+  {
+    pergunta: `Durante a preparação de paredes em alvenaria estrutural para receber revestimento cerâmico em um shopping center, qual é a função técnica essencial do chapisco aplicado como primeira camada do sistema de revestimento argamassado?
+a) Melhorar o acabamento estético
+b) Aumentar a resistência estrutural da parede
+c) Tornar a base mais rugosa para melhor aderência
+d) Reduzir a absorção de água`,
+    resposta: "c) Tornar a base mais rugosa para melhor aderência"
+  },
+  {
+    pergunta: `Na execução de um contrapiso em argamassa para receber piso tátil em uma estação metroviária, considerando as exigências de tráfego intenso e durabilidade, qual é o período mínimo de cura que deve ser respeitado antes da aplicação do revestimento final?
+a) 7 dias
+b) 14 dias
+c) 28 dias
+d) 60 dias`,
+    resposta: "c) 28 dias"
+  },
+  {
+    pergunta: `Em um projeto de restauração de um edifício histórico com paredes de alvenaria de tijolos maciços, qual é a principal função técnica da camada de emboço no sistema de revestimento tradicional?
+a) Regularização e absorção de deformações
+b) Acabamento final liso
+c) Impermeabilização da parede
+d) Isolamento térmico`,
+    resposta: "a) Regularização e absorção de deformações"
+  },
+  {
+    pergunta: `Durante a execução de revestimento argamassado em fachadas de um edifício corporativo com 30 pavimentos, qual é o espaçamento máximo que deve ser adotado entre as taliscas-guia para garantir o perfeito alinhamento e planaridade das superfícies?
+a) 0,5 m
+b) 1,0 m
+c) 2,0 m
+d) 3,0 m`,
+    resposta: "d) 3,0 m"
+  },
+  {
+    pergunta: `Na preparação de substratos para receber revestimento cerâmico em áreas molhadas de um clube esportivo, qual tipo de acabamento superficial deve ser especificado para garantir a perfeita aderência das argamassas colantes?
+a) Desempeno grosso
+b) Desempeno fino
+c) Desempeno camurçado
+d) Acabamento liso com desempenadeira de aço`,
+    resposta: "a) Desempeno grosso"
+  },
+  {
+    pergunta: `Em um laboratório de tecnologia de materiais de construção, ao analisar as características dos agregados para concreto, como a NBR classifica tecnicamente esses materiais granulares?
+a) Material granular com forma e volume definidos.
+b) Material granular sem forma e volume definidos, geralmente inerte.
+c) Material líquido usado para aumentar a trabalhabilidade do concreto.
+d) Material orgânico que acelera a pega do cimento.`,
+    resposta: "b) Material granular sem forma e volume definidos, geralmente inerte."
+  },
+  {
+    pergunta: `Em uma concreteira que fornece para obras de pré-moldados, onde é essencial alta resistência nas primeiras horas de cura, qual composto do cimento Portland é o principal responsável por desenvolver rapidamente essa resistência inicial?
+a) C₂S
+b) C₂A
+c) C₄AF
+d) C₃A`,
+    resposta: "d) C₃A"
+  },
+  {
+    pergunta: `Durante o controle de qualidade de agregados para uma grande obra de infraestrutura, o engenheiro precisa determinar o módulo de finura. Qual conceito técnico preciso define corretamente este parâmetro granulométrico?
+a) A soma das porcentagens retidas acumuladas em peneiras da série normal, dividida por 100.
+b) A relação entre a massa e o volume do agregado.
+c) A quantidade de material que passa na peneira #200.
+d) O diâmetro máximo dos grãos do agregado.`,
+    resposta: "a) A soma das porcentagens retidas acumuladas em peneiras da série normal, dividida por 100."
+  },
+  {
+    pergunta: `Na composição química do cimento Portland utilizado em uma barragem, qual é a função específica da gipsita adicionada durante o processo de moagem do clínquer?
+a) Aumentar a resistência final.
+b) Controlar o tempo de pega.
+c) Reduzir o calor de hidratação.
+d) Melhorar a trabalhabilidade do concreto fresco.`,
+    resposta: "b) Controlar o tempo de pega."
+  },
+  {
+    pergunta: `Para as fundações de um terminal portuário em região com alto teor de sulfatos no solo e na água do mar, qual tipo de cimento deve ser especificado para garantir a durabilidade da estrutura em meio agressivo?
+a) CP I
+b) CP V-ARI
+c) CP III
+d) CPB-40`,
+    resposta: "c) CP III"
+  },
+  {
+    pergunta: `Em um projeto de ponte estaiada com elementos estruturais complexos e densamente armados, qual propriedade do concreto auto-adensável (CAA) é essencial para garantir o perfeito preenchimento das formas, conforme estabelecido na NBR 15823?
+a) Alta resistência inicial.
+b) Fluidez e capacidade de preencher formas sem vibração.
+c) Baixo consumo de cimento.
+d) Presença de fibras metálicas.`,
+    resposta: "b) Fluidez e capacidade de preencher formas sem vibração."
+  },
+{
+    pergunta: `Situação Problema 1: Descolamento do Revestimento Argamassado em Parede Interna
+Em um hospital em construção, o reboco de gesso aplicado sobre alvenaria estrutural começou a se desprender em placas inteiras, expondo o chapisco. O problema ocorre principalmente em paredes mais altas (acima de 3 m). O que você julga como uma possível causas desse descolamento?`,
+    resposta: " "
+  },
+  {
+    pergunta: `Situação Problema 2: Alto Inchamento da Areia no Canteiro
+Em uma obra no litoral, a areia úmida (umidade de 8%) aumentou seu volume em 25%, causando erros na dosagem em volume. O traço previa 700 kg/m³ de areia seca, mas o inchamento levou a um consumo real menor. O que você julga como possíveis causas e soluções para esse problema.`,
+    resposta: " "
+  },
+  {
+    pergunta: `Situação Problema 3: Entupimento de Bomba em Concreto para Laje Nervurada
+Durante o bombeamento de concreto para uma laje nervurada, a tubulação entupiu repetidamente. O concreto tinha brita 25 mm, slump de 120 mm, e não continha aditivos plastificantes. O que você julga como possíveis causas e como solucionar para esse problema.`,
+    resposta: " "
+  }
+      ],
+      estruturas: [
+       {
+      pergunta: `Em estruturas isostáticas, existe um tipo especial de viga que combina diferentes trechos estruturais para melhor distribuição de esforços. Essa solução é frequentemente aplicada em pontes e estruturas com vãos longos. O que são vigas Gerber?
+a) Vigas que suportam apenas cargas concentradas
+b) Vigas formadas pela associação de trechos com e sem estabilidade própria
+c) Vigas que não permitem deformações
+d) Vigas utilizadas apenas em estruturas metálicas`,
+      resposta: "b) Vigas formadas pela associação de trechos com e sem estabilidade própria"
+    },
+    {
+      pergunta: `As conexões específicas em certos tipos de vigas desempenham um papel crucial no comportamento estrutural, afetando a transmissão de esforços entre os diferentes elementos. Qual é a principal função das rótulas em vigas Gerber?
+a) Aumentar a rigidez da estrutura
+b) Permitir a transmissão de momentos fletores
+c) Tornar a estrutura estável
+d) Impedir rotações relativas`,
+      resposta: "c) Tornar a estrutura estável"
+    },
+    {
+      pergunta: `Em determinados pontos estratégicos de uma estrutura, ocorre uma condição especial quanto à transmissão de esforços internos, que é fundamental para o equilíbrio do sistema. Qual é a condição de momento fletor em uma rótula?
+a) Momento é maior que zero
+b) Momento é menor que zero
+c) Momento é igual a zero
+d) Momento é igual a 1`,
+      resposta: "c) Momento é igual a zero"
+    },
+    {
+      pergunta: `Para determinar os esforços em estruturas treliçadas, os engenheiros utilizam um método que considera o equilíbrio em pontos específicos da estrutura. O que o método dos nós utiliza para analisar treliças?
+a) Equilíbrio de momentos
+b) Equilíbrio de forças em cada nó
+c) Deformações dos membros
+d) Tensões internas`,
+      resposta: "b) Equilíbrio de forças em cada nó"
+    },
+    {
+      pergunta: `Nos elementos de uma treliça, as forças axiais podem atuar de duas maneiras distintas, cada uma produzindo um efeito específico no comportamento do elemento estrutural. O que caracteriza uma força de tração em um membro de treliça?
+a) A força tende a encurtar o membro
+b) A força tende a alongar o membro
+c) A força é perpendicular ao eixo do membro
+d) A força é nula`,
+      resposta: "b) A força tende a alongar o membro"
+    },
+    {
+      pergunta: `Os elementos estruturais submetidos a forças axiais apresentam comportamentos distintos dependendo da natureza do esforço aplicado, o que influencia seu dimensionamento. Qual a diferença fundamental no comportamento estrutural entre barras tracionadas e comprimidas em treliças?
+a) Tração atua no sentido de alongamento, enquanto compressão tende a encurtar o elemento
+b) Compressão gera tensões uniformes, tração cria tensões variáveis
+c) Tração causa deformação plástica imediata, compressão só deforma elasticamente
+d) Ambos produzem efeitos idênticos, apenas com sinais opostos`,
+      resposta: "a) Tração atua no sentido de alongamento, enquanto compressão tende a encurtar o elemento"
+    },
+    {
+      pergunta: `No dimensionamento de elementos estruturais lineares, um dos esforços internos mais importantes representa a resultante de forças em determinada direção. O que representa o esforço cortante em uma viga?
+a) A resultante de forças na direção longitudinal
+b) A resultante de forças na direção transversal
+c) O momento de flexão
+d) A deformação da viga`,
+      resposta: "b) A resultante de forças na direção transversal"
+    },
+    {
+      pergunta: `"Entende-se por estrutura a parte da construção responsável pela estabilidade e pela resistência a ações externas..." Sobre os tipos de vínculos de uma estrutura, marque a alternativa que não representa um tipo de vínculo de estruturas isostáticas.
+a) Apoio articulado
+b) Apoio de arrimo
+c) Apoio duplo articulado
+d) Rótula`,
+      resposta: "b) Apoio de arrimo"
+    },
+    {
+      pergunta: `Em análise estrutural, o diagrama de esforços cortantes apresenta um comportamento característico quando submetido a cargas pontuais. O que ocorre no diagrama de esforços cortantes no ponto de aplicação de uma carga concentrada?
+a) Uma descontinuidade igual ao valor da carga
+b) Uma descontinuidade igual ao dobro da carga
+c) Uma continuidade sem alteração
+d) Uma descontinuidade igual à metade da carga`,
+      resposta: "a) Uma descontinuidade igual ao valor da carga"
+    },
+    {
+      pergunta: `O Sistema Internacional de Unidades estabelece padrões para grandezas físicas fundamentais. Na mecânica das estruturas, a unidade básica para quantificar forças segue o nome de um importante físico. Qual é a unidade de força no Sistema Internacional?
+a) kgf
+b) N (Newton)
+c) tf
+d) lb`,
+      resposta: "b) N (Newton)"
+    },
+    {
+      pergunta: `Na engenharia civil, certos sistemas estruturais combinam elementos verticais e horizontais de forma específica para criar estruturas rígidas capazes de resistir a diversos tipos de carregamento. Como pode ser definido um pórtico na engenharia estrutural?
+a) Sistema estrutural composto exclusivamente por elementos horizontais (vigas) apoiados diretamente no solo
+b) Sistema estrutural rígido formado pela associação de elementos verticais (pilares) e horizontais (vigas) com conexões resistentes a momentos
+c) Arranjo estrutural constituído somente por elementos verticais (colunas) independentes
+d) Sistema estrutural flexível formado por elementos tracionados (cabos) e ancoragens`,
+      resposta: "b) Sistema estrutural rígido formado pela associação de elementos verticais (pilares) e horizontais (vigas) com conexões resistentes a momentos"
+    },
+    {
+      pergunta: `O processo de cálculo estrutural requer uma abordagem sistemática, iniciando sempre pela representação gráfica que identifica todas as forças atuantes no sistema. Qual é o primeiro passo na análise de pórticos?
+a) Determinar as reações de apoio
+b) Desenhar o diagrama de corpo livre (DCL)
+c) Calcular os esforços internos
+d) Determinar as deformações`,
+      resposta: "b) Desenhar o diagrama de corpo livre (DCL)"
+    },
+    {
+      pergunta: `Em elementos estruturais simplesmente apoiados submetidos a carregamentos distribuídos, os esforços internos e deformações seguem padrões matemáticos bem definidos. Em uma viga simplesmente apoiada sujeita a uma carga distribuída uniformemente, qual das afirmações a seguir é correta?
+a) O momento fletor máximo ocorre nos apoios da viga
+b) A deflexão máxima ocorre nos apoios da viga
+c) O momento fletor máximo ocorre no centro da viga
+d) A deflexão máxima ocorre na extremidade da viga`,
+      resposta: "c) O momento fletor máximo ocorre no centro da viga"
+    },
+    {
+      pergunta: `Certas conexões em estruturas são projetadas para permitir movimentos específicos, influenciando significativamente a distribuição de esforços internos. O que é uma rótula em uma estrutura?
+a) Um ponto que impede rotações
+b) Um ponto que permite rotações e não transmite momentos
+c) Um ponto que transmite momentos fletores
+d) Um ponto que impede deslocamentos lineares`,
+      resposta: "b) Um ponto que permite rotações e não transmite momentos"
+    },
+    {
+      pergunta: `A classificação de estruturas quanto à sua estabilidade considera a relação entre o número de vínculos e as equações disponíveis para análise. Qual é a condição para que uma estrutura seja isostática?
+a) Ter mais reações de apoio do que equações de equilíbrio
+b) O número de disposição das restrições vinculares impede a totalidade dos movimentos de corpo rígido da estrutura
+c) Ter menos reações de apoio do que equações de equilíbrio
+d) Não ter reações de apoio`,
+      resposta: "b) O número de disposição das restrições vinculares impede a totalidade dos movimentos de corpo rígido da estrutura"
+    },
+    {
+      pergunta: `Os vínculos estruturais são classificados de acordo com suas restrições cinemáticas, sendo que o tipo mais simples limita o movimento em uma única direção. Qual é a principal característica de um apoio de primeiro gênero?
+a) Restringir o movimento em uma direção sendo apenas no sentido vertical
+b) Restringir o movimento em uma direção sendo apenas no sentido horizontal
+c) Restringir movimentos verticais e rotação
+d) Restringir o movimento em uma direção sendo horizontal, vertical ou rotação`,
+      resposta: "d) Restringir o movimento em uma direção sendo horizontal, vertical ou rotação"
+    },
+    {
+      pergunta: `Um tipo intermediário de vínculo estrutural oferece restrições específicas que são fundamentais para muitos sistemas isostáticos. Qual é a principal característica de um apoio de segundo gênero?
+a) Restringir apenas o movimento horizontal da estrutura
+b) Restringir o movimento em uma direção no sentido horizontal
+c) Restringir o movimento em duas direções
+d) Restringir apenas o esforço de rotação`,
+      resposta: "c) Restringir o movimento em duas direções"
+    },
+    {
+      pergunta: `O tipo mais rígido de vínculo estrutural oferece restrições completas aos movimentos, sendo essencial para certas configurações estruturais. Qual é a principal característica de um apoio de terceiro gênero?
+a) Restringir os esforços horizontais, verticais e de rotação simultaneamente
+b) Momento resultante é igual a zero
+c) Restringir dois esforços
+d) Também chamado de engaste, esse apoio restringe apenas a rotação do nó`,
+      resposta: "a) Restringir os esforços horizontais, verticais e de rotação simultaneamente"
+    },
+    {
+      pergunta: `Na análise de treliças, adota-se uma convenção específica para representar os diferentes tipos de esforços axiais nos elementos. No método dos nós, a força de tração é:
+a) Positiva
+b) Negativa
+c) Nula
+d) Zero`,
+      resposta: "a) Positiva"
+    },
+    {
+      pergunta: `A mesma convenção de sinais utilizada para forças axiais em treliças atribui um sinal específico aos elementos que estão sujeitos a encurtamento. No método dos nós, a força de compressão é:
+a) Positiva
+b) Nula
+c) Negativa
+d) Zero`,
+      resposta: "c) Negativa"
+    },
+    {
+      pergunta: `A configuração de apoios em vigas determina sua classificação quanto à estaticidade, exigindo combinações específicas de vínculos para garantir a isostaticidade. Para uma viga bi apoiada ser isostática ela deve apresentar:
+a) Dois apoios de primeiro gênero
+b) Um apoio de segundo gênero e um apoio de terceiro gênero
+c) Um apoio de primeiro gênero e um apoio de segundo gênero
+d) Apenas um engaste`,
+      resposta: "c) Um apoio de primeiro gênero e um apoio de segundo gênero"
+    },
+    {
+      pergunta: `A introdução de rótulas em estruturas pode alterar significativamente seu grau de hiperestaticidade. Em certas configurações específicas, essa adição transforma sistemas hiperestáticos em estruturas isostáticas. Em qual dessas situações a aplicação de uma rótula deixará a estrutura isostática?
+a) Uma estrutura com 4 restrições
+b) Uma estrutura com 2 restrições
+c) Uma estrutura com 1 restrição
+d) Uma estrutura com 3 restrições`,
+      resposta: "a) Uma estrutura com 4 restrições"
+    },
+    {
+      pergunta: `No estudo da resistência dos materiais, a tensão é uma grandeza fundamental que relaciona forças internas com áreas de seção transversal, tendo sua própria unidade no Sistema Internacional. Qual é a unidade da tensão no Sistema Internacional (SI)?
+a) Newton (N)
+b) Pascal (Pa)
+c) Joule (J)
+d) Watt (W)`,
+      resposta: "b) Pascal (Pa)"
+    },
+    {
+      pergunta: `Diferentes tipos de carregamento produzem distintos estados de tensão nos materiais. Um caso particular ocorre quando elementos estruturais são submetidos a momentos torçores. Qual tipo de tensão é desenvolvida quando as cargas externas tendem a torcer um segmento do corpo?
+a) Tensão normal
+b) Tensão de cisalhamento
+c) Momento fletor
+d) Momento de torção`,
+      resposta: "d) Momento de torção"
+    },
+    {
+      pergunta: `As vigas Gerber oferecem soluções específicas para problemas estruturais, apresentando particularidades que as tornam vantajosas em certas aplicações de engenharia civil. Qual das alternativas apresenta a principal vantagem da utilização de vigas Gerber em uma estrutura?
+a) Agilidade na montagem de estruturas e fabricação de peças pré-moldadas
+b) Aumento da capacidade de carga da estrutura como um todo, proporcionando maior resistência global
+c) Simplificação do processo construtivo, permitindo montagem mais rápida em obras com elementos pré-fabricados
+d) Eliminação da necessidade de juntas de dilatação em estruturas muito longas, garantindo maior durabilidade
+e) Melhoria no desempenho dinâmico da estrutura sob cargas vibratórias ou sísmicas`,
+      resposta: "a) Agilidade na montagem de estruturas e fabricação de peças pré-moldadas"
+    },
+    {
+      pergunta: `A caracterização mecânica dos materiais é frequentemente realizada através de um gráfico fundamental que relaciona dois parâmetros essenciais do comportamento dos materiais. Qual é a principal finalidade do diagrama tensão-deformação na análise de materiais?
+a) Determinar a coloração superficial do material
+b) Identificar as propriedades mecânicas do material, como limite de escoamento, resistência à tração e ductilidade
+c) Medir a massa específica ou peso do material
+d) Avaliar a capacidade do material de conduzir corrente elétrica`,
+      resposta: "b) Identificar as propriedades mecânicas do material, como limite de escoamento, resistência à tração e ductilidade"
+    },
+    {
+      pergunta: `No regime elástico dos materiais, existe um ponto específico que marca o fim da relação linear entre tensão e deformação, sendo importante para dimensionamento estrutural. Como é denominado o limite superior da relação linear tensão-deformação?
+a) Limite de ruptura
+b) Limite de proporcionalidade
+c) Limite de elasticidade
+d) Limite de deformação`,
+      resposta: "b) Limite de proporcionalidade"
+    },
+    {
+      pergunta: `Um dos ensaios mecânicos mais importantes para caracterização de materiais visa estabelecer a relação entre dois parâmetros fundamentais através de um procedimento padronizado. Qual é o principal objetivo do ensaio de tração em materiais?
+a) Determinar a resistência do material à flexão
+b) Estabelecer a curva característica de tensão versus deformação do material
+c) Medir a capacidade de transferência de calor do material
+d) Avaliar a massa específica do material`,
+      resposta: "b) Estabelecer a curva característica de tensão versus deformação do material"
+    },
+    {
+      pergunta: `Durante ensaios mecânicos, a medição precisa das deformações é realizada por instrumentos específicos que convertem variações dimensionais em sinais mensuráveis. Qual equipamento é usado para medir a deformação diretamente em um corpo de prova?
+a) Termômetro
+b) Extensômetro de resistência elétrica
+c) Barômetro
+d) Dinamômetro`,
+      resposta: "b) Extensômetro de resistência elétrica"
+    },
+    {
+      pergunta: `Além das deformações lineares, os materiais podem sofrer outro tipo de deformação angular quando submetidos a esforços específicos, caracterizando um fenômeno distinto. O que é a deformação por cisalhamento?
+a) Alongamento de um segmento de reta
+b) Mudança no ângulo entre dois segmentos originalmente perpendiculares
+c) Variação no volume do material
+d) Alteração na temperatura do material`,
+      resposta: "b) Mudança no ângulo entre dois segmentos originalmente perpendiculares"
+    },
+    {
+      pergunta: `Em conexões estruturais e apoios, surge um tipo específico de tensão normal resultante da interação entre superfícies em contato sob compressão. O que é a tensão de apoio?
+a) Tensão normal provocada pela compressão entre superfícies
+b) Tensão de cisalhamento em um pino
+c) Deformação por flexão
+d) Variação térmica no material`,
+      resposta: "a) Tensão normal provocada pela compressão entre superfícies"
+    },
+    {
+      pergunta: `O estado de tensão por cisalhamento apresenta uma propriedade fundamental que relaciona as tensões em planos perpendiculares entre si. Qual dessas alternativas expressa a propriedade complementar do cisalhamento?
+a) Tensões de cisalhamento em faces opostas são iguais em magnitude e direção
+b) Tensões normais são sempre nulas
+c) Deformações são independentes da tensão
+d) Materiais isotrópicos não sofrem cisalhamento`,
+      resposta: "a) Tensões de cisalhamento em faces opostas são iguais em magnitude e direção"
+    },
+    {
+      pergunta: `A deformação normal é uma grandeza adimensional que mede a variação relativa no comprimento de um material sob carregamento. Sua representação em unidades específicas facilita a interpretação de resultados experimentais. Qual é a unidade comum para expressar deformação normal?
+a) MPa
+b) μm/m (micrômetro por metro)
+c) N/m²
+d) rad`,
+      resposta: "b) μm/m (micrômetro por metro)"
+    },
+    {
+      pergunta: `Na análise estrutural, o DCL é uma ferramenta fundamental que representa todas as forças externas atuantes sobre um corpo, permitindo a aplicação das equações de equilíbrio. Qual das alternativas abaixo descreve corretamente uma das principais características do diagrama de corpo livre?
+a) Calcular a dimensão do material
+b) Identificar as forças internas e externas que atuam sobre o corpo
+c) Medir a rigidez do material
+d) Arbitrar os esforços internos do material`,
+      resposta: "b) Identificar as forças internas e externas que atuam sobre o corpo"
+    },
+    {
+      pergunta: `Em conexões estruturais como rebites e pinos, ocorre um estado de tensão específico onde o esforço cortante se distribui em duas seções distintas. O que é o cisalhamento duplo?
+a) Quando a força de cisalhamento age em apenas uma seção
+b) Quando a força de cisalhamento age em duas seções
+c) Quando não há força de cisalhamento
+d) Quando a força é apenas normal`,
+      resposta: "b) Quando a força de cisalhamento age em duas seções"
+    },
+    {
+      pergunta: `A deformação angular em materiais submetidos a esforços cortantes é quantificada por uma unidade específica do Sistema Internacional, relacionada a medidas angulares. Qual é a unidade utilizada para medir a deformação por cisalhamento?
+a) Metros (m)
+b) Radianos (rad)
+c) Newtons (N)
+d) Pascais (Pa)`,
+      resposta: "b) Radianos (rad)"
+    },
+    {
+      pergunta: `A região elástica no diagrama tensão-deformação é caracterizada por um parâmetro fundamental que relaciona linearmente essas duas grandezas, definindo a rigidez do material. O que é o módulo de elasticidade?
+a) A inclinação da região elástica no diagrama tensão-deformação
+b) A área sob a curva tensão-deformação
+c) A tensão de ruptura
+d) A deformação máxima`,
+      resposta: "a) A inclinação da região elástica no diagrama tensão-deformação"
+    },
+    {
+      pergunta: `Em projetos de engenharia, a capacidade de um material é limitada por critérios de segurança que consideram incertezas e variações nas propriedades dos materiais. O que significa a tensão admissível de um material?
+a) A tensão máxima que um material pode suportar
+b) A tensão segura definida em projeto, considerando o fator de segurança
+c) A tensão no ponto de ruptura
+d) A tensão térmica`,
+      resposta: "b) A tensão segura definida em projeto, considerando o fator de segurança"
+    },
+    {
+      pergunta: `Para análise de propriedades mecânicas, utiliza-se um gráfico específico que relaciona grandezas normalizadas, facilitando a comparação entre diferentes materiais. O que é o diagrama tensão-deformação convencional?
+a) Um gráfico de carga versus tempo
+b) Um gráfico de tensão nominal versus deformação nominal
+c) Um gráfico de temperatura versus deformação
+d) Um gráfico de volume versus pressão`,
+      resposta: "b) Um gráfico de tensão nominal versus deformação nominal"
+    },
+    {
+      pergunta: `Os esforços internos em estruturas geram diferentes tipos de tensão, cada um com direções características em relação ao plano de análise. Qual é a principal diferença entre tensão normal e tensão de cisalhamento?
+a) A tensão normal age perpendicularmente à área, e a de cisalhamento age tangencialmente
+b) A tensão normal age tangencialmente, e a de cisalhamento age perpendicularmente
+c) Ambas agem na mesma direção
+d) Não há diferença`,
+      resposta: "a) A tensão normal age perpendicularmente à área, e a de cisalhamento age tangencialmente"
+    },
+    {
+      pergunta: `Técnicas específicas de análise estrutural permitem determinar esforços internos em pontos estratégicos, essenciais para o dimensionamento de elementos. Qual é a principal finalidade do Método das Seções na análise estrutural?
+a) Avaliar propriedades térmicas de materiais sob carregamento
+b) Determinar esforços internos (normal, cortante e momento fletor) em uma seção específica
+c) Analisar características superficiais do material
+d) Verificar propriedades de transferência de calor`,
+      resposta: "b) Determinar esforços internos (normal, cortante e momento fletor) em uma seção específica"
+    },
+    {
+      pergunta: `Critérios de projeto incorporam margens de segurança para compensar incertezas, calculadas através de uma relação entre capacidades teóricas e práticas. O que é o fator de segurança (FS) em um projeto?
+a) A razão entre a carga de ruptura e a carga admissível
+b) A razão entre a carga admissível e a carga de ruptura
+c) A soma das cargas
+d) A diferença entre as cargas`,
+      resposta: "a) A razão entre a carga de ruptura e a carga admissível"
+    },
+    {
+      pergunta: `Os materiais estruturais respondem de maneira distinta aos esforços aplicados. Dentro de certos limites, muitos materiais exibem uma capacidade particular de recuperação após a remoção das cargas. O que é o comportamento elástico de um material?
+a) Quando o material não retorna à forma original após a remoção da carga
+b) Quando o material retorna à forma original após a remoção da carga
+c) Quando o material sofre ruptura
+d) Quando o material muda de cor`,
+      resposta: "b) Quando o material retorna à forma original após a remoção da carga"
+    },
+    {
+      pergunta: `No dimensionamento estrutural, é crucial identificar o ponto em que um material passa do regime elástico para o plástico, mantendo suas propriedades originais até esse limite específico. O que caracteriza o limite de elasticidade de um material?
+a) A tensão máxima em que o material se deforma elasticamente, retornando à sua forma original quando a carga é removida
+b) A tensão máxima absoluta que o material suporta antes da ruptura
+c) O ponto em que a deformação plástica se torna permanente, mesmo após a remoção da carga
+d) A tensão que marca o início do escoamento, onde ocorre deformação plástica sem aumento de carga`,
+      resposta: "a) A tensão máxima em que o material se deforma elasticamente, retornando à sua forma original quando a carga é removida"
+    },
+    {
+      pergunta: `Além do tradicional ensaio de tração, os engenheiros utilizam outro método experimental fundamental para avaliar o comportamento dos materiais sob diferentes tipos de carregamento. O que é o ensaio de compressão?
+a) Um teste para determinar a resistência à tração
+b) Um teste para determinar a resistência à compressão
+c) Um teste para medir a compressão e a torção
+d) Um teste para medir a densidade`,
+      resposta: "b) Um teste para determinar a resistência à compressão"
+    },
+    {
+      pergunta: `A capacidade de um material absorver energia quando deformado elasticamente é quantificada por um parâmetro específico, importante para aplicações onde a recuperação após carregamento é essencial. O que é o módulo de resiliência?
+a) A energia absorvida até a ruptura
+b) A energia absorvida na região elástica
+c) A energia térmica
+d) A energia cinética`,
+      resposta: "b) A energia absorvida na região elástica"
+    },
+    {
+      pergunta: `Quando materiais são submetidos a esforços axiais, ocorre um fenômeno de deformação transversal que é caracterizado por uma constante adimensional específica. O que é o coeficiente de Poisson?
+a) A razão entre a deformação lateral e a deformação axial
+b) A razão entre a tensão e a deformação
+c) A razão entre a carga e a área
+d) A razão entre o volume e a massa`,
+      resposta: "a) A razão entre a deformação lateral e a deformação axial"
+    },
+    {
+      pergunta: `No diagrama tensão-deformação, existe um ponto crítico que marca a transição entre dois regimes distintos de comportamento mecânico do material. O que define o limite de escoamento de um material?
+a) A tensão em que o material inicia sua deformação plástica, apresentando um aumento significativo de deformação sem aumento de carga
+b) A tensão máxima que leva o material à ruptura
+c) O ponto onde não há tensão aplicada ao material
+d) O ponto de deformação absoluta máxima antes da fratura`,
+      resposta: "a) A tensão em que o material inicia sua deformação plástica, apresentando um aumento significativo de deformação sem aumento de carga"
+    },
+    {
+      pergunta: `A análise estrutural requer a compreensão dos diferentes tipos de solicitações internas que podem atuar em um elemento, cada uma com características específicas de distribuição de tensões. Para um corpo sólido, quais são os tipos de esforços internos encontrados:
+a) Força normal, cisalhamento, compressão e toque
+b) Força normal, momento fletor, torque e força pontual
+c) Força normal, momento fletor, torque e trabalho
+d) Força normal, momento fletor, torque e cisalhamento`,
+      resposta: "d) Força normal, momento fletor, torque e cisalhamento"
+    },
+ {
+      pergunta: `Problema: Estrutura Hipostática
+Ao realizar um cálculo estrutural você nota que em uma viga bi apoiada há dois apoios de primeiro gênero contidos em cada extremidade dessa viga. Sabendo que essa estrutura está hipostática, como você faria para transforma-la em isostática sem alterar os dois apoios existentes?`,
+      resposta: " "
+    },
+    {
+      pergunta: `Problema: Instalação de Painéis solares sobre uma viga
+Um engenheiro precisa instalar painéis solares sobre uma estrutura isostática de telhado metálico. Julgue se há necessidade de alteração nos apoios mantendo o regime isostático, se os esforços são necessários e como os painéis se comportariam como carga sobre essa viga.`,
+      resposta: " "
+    },
+    {
+      pergunta: `Problema: Deformação uma Ponte Suspensa
+Em uma ponte suspensa são utilizados cabos de aço para suportar o tabuleiro. Durante a construção, os engenheiros observam que os cabos sofrem deformações normais um pouco elevadas devido ao peso próprio e às cargas de tráfego. Que medidas poderiam ser tomadas para reduzir a deformação sem comprometer a segurança?`,
+      resposta: " "
+    },
+    {
+      pergunta: `Problema: Transformação de uma estrutura Hiperestática
+Um pórtico plano apresenta os seguintes apoios: 3 apoios de segundo gênero, 2 apoios de primeiro gênero, uma rótula. Transforme essa estrutura em um pórtico isostático, fazendo até 4 mudanças ou retiradas dos apoios.`,
+      resposta: " "
+    },
+    {
+      pergunta: `Problema: Ruptura Fora do Comprimento Útil
+Um corpo de prova de aço rompeu próximo às garras do equipamento, e não na região central (comprimento útil), invalidando o ensaio segundo normas técnicas. Dentre as possíveis causas foram:
+• Concentração de tensões nas garras
+• Defeitos no corpo de prova
+• Fixação inadequada
+• Material homogêneo porém com variação de temperatura
+Julgue quais dessas possíveis causas realmente poderiam resultar nessa falha do ensaio e justifique.`,
+      resposta: " "
+    },
+{
+    pergunta: `No método das forças para análise de estruturas hiperestáticas, a primeira etapa crucial envolve a criação de um sistema base isostático a partir da estrutura original, mantendo sua estabilidade geométrica. No Método das Forças, como se define o Sistema Principal (SP)?
+a) Uma estrutura hiperestática criada pela adição de vínculos à estrutura original
+b) Uma estrutura isostática e geometricamente estável, obtida pela remoção de vínculos excedentes da estrutura hiperestática original
+c) Uma estrutura com movimento livre (mecanismo), sem restrição cinemática
+d) Uma estrutura que mantém o mesmo grau de hiperestaticidade da original`,
+    resposta: "b) Uma estrutura isostática e geometricamente estável, obtida pela remoção de vínculos excedentes da estrutura hiperestática original"
+  },
+  {
+    pergunta: `O método das forças introduz variáveis adicionais que representam as incógnitas da estrutura hiperestática, relacionadas diretamente aos vínculos suprimidos para criar o sistema principal. No Método das Forças, o que são os hiperestáticos?
+a) Deslocamentos nodais desconhecidos
+b) Forças ou momentos associados aos vínculos eliminados
+c) Coeficientes de rigidez das barras
+d) Termos de carga da estrutura`,
+    resposta: "b) Forças ou momentos associados aos vínculos eliminados"
+  },
+  {
+    pergunta: `Diferentemente do método das forças, esta abordagem prioriza o atendimento das condições de compatibilidade de deslocamentos antes de satisfazer as equações de equilíbrio. Em Hiperestática, qual é a principal característica do Método dos Deslocamentos?
+a) Resolver o problema considerando primeiro as condições de equilíbrio
+b) Utilizar coeficientes de flexibilidade para a solução
+c) Resolver o problema considerando primeiro as condições de compatibilidade
+d) Eliminar vínculos para criar uma estrutura isostática`,
+    resposta: "c) Resolver o problema considerando primeiro as condições de compatibilidade"
+  },
+  {
+    pergunta: `No método dos deslocamentos, as incógnitas fundamentais são os graus de liberdade não restringidos da estrutura, que podem ser deslocamentos lineares ou rotações. O que são deslocabilidades no Método dos Deslocamentos?
+a) Forças ou momentos desconhecidos
+b) Componentes de deslocamentos e rotações nodais livres
+c) Vínculos adicionados à estrutura
+d) Coeficientes de rigidez das barras`,
+    resposta: "b) Componentes de deslocamentos e rotações nodais livres"
+  },
+  {
+    pergunta: `A solução final no método das forças é obtida através da combinação linear dos diversos casos básicos considerados, ponderados pelos valores dos hiperestáticos. No Método das Forças, como são obtidos os esforços internos finais?
+a) Somando os esforços dos casos básicos ponderados pelos hiperestáticos
+b) Resolvendo apenas o caso (0)
+c) Utilizando apenas os termos de carga
+d) Ignorando os coeficientes de flexibilidade`,
+    resposta: "a) Somando os esforços dos casos básicos ponderados pelos hiperestáticos"
+  },
+  {
+    pergunta: `No método dos deslocamentos, estes termos representam as ações externas que mantêm a estrutura em equilíbrio quando todas as deslocabilidades são bloqueadas. No Método dos Deslocamentos, o que são os termos de carga?
+a) Forças ou momentos necessários para equilibrar o sistema hiperestático com deslocabilidades nulas
+b) Deslocamentos provocados pelos hiperestáticos
+c) Coeficientes de rigidez das barras
+d) Vínculos adicionados à estrutura`,
+    resposta: "a) Forças ou momentos necessários para equilibrar o sistema hiperestático com deslocabilidades nulas"
+  },
+  {
+    pergunta: `Entre as vantagens comparativas do método dos deslocamentos está sua maior adequação para implementação computacional e análise de estruturas complexas. Qual é a vantagem do Método dos Deslocamentos em relação ao Método das Forças?
+a) Exige menos cálculos manuais devido ao uso de coeficientes tabelados
+b) Utiliza apenas condições de equilíbrio
+c) Não considera deslocamentos nodais
+d) É aplicável apenas a estruturas isostáticas`,
+    resposta: "a) Exige menos cálculos manuais devido ao uso de coeficientes tabelados"
+  },
+  {
+    pergunta: `O cálculo de momentos fletores em vigas com restrição total de rotação nas extremidades segue fórmulas específicas para diferentes tipos de carregamento. Em uma viga biengastada que tem um carregamento uniforme. Quais são os momentos fletores nas extremidades?
+a) Ql²/12
+b) Ql²/8
+c) Q²l/12
+d) l/8`,
+    resposta: "a) Ql²/12"
+  },
+  {
+    pergunta: `Esta representação gráfica é fundamental na análise estrutural, mostrando todas as forças externas atuantes sobre um corpo ou parte dele. O que é um diagrama de corpo livre?
+a) Gráfico de tensão vs. deformação
+b) Representação de todas as forças atuantes em um corpo
+c) Diagrama de momentos fletores
+d) Representação do Círculo de Mohr`,
+    resposta: "b) Representação de todas as forças atuantes em um corpo"
+  },
+  {
+    pergunta: `Este tipo de tensão ocorre quando forças são aplicadas paralelamente à área de seção transversal, diferindo fundamentalmente da tensão normal. O que representa a tensão de cisalhamento (τ)?
+a) Força por unidade de área perpendicular ao plano
+b) Força por unidade de área tangente ao plano
+c) Deformação longitudinal por unidade de comprimento
+d) Momento por unidade de volume`,
+    resposta: "b) Força por unidade de área tangente ao plano"
+  },
+  {
+    pergunta: `A análise de tensões em corpos sólidos utiliza uma ferramenta gráfica fundamental que permite visualizar como as componentes de tensão variam em diferentes planos de orientação. Qual é a principal função do Círculo de Mohr em análise de tensões?
+a) Representar a distribuição térmica em um corpo sólido sujeito a gradientes de temperatura
+b) Visualizar graficamente como as componentes de tensão normal e cisalhante variam em diferentes planos de orientação
+c) Demonstrar a relação não-linear entre módulo de elasticidade e deformação em materiais
+d) Mapear o movimento de partículas fluidas em regime de escoamento`,
+    resposta: "b) Visualizar graficamente como as componentes de tensão normal e cisalhante variam em diferentes planos de orientação"
+  },
+  {
+    pergunta: `Em um ponto material submetido a um estado de tensão, existem planos específicos onde as tensões normais atingem valores extremos e as tensões cisalhantes são nulas. O que são tensões principais?
+a) Tensões de cisalhamento máximas
+b) Tensões normais máxima e mínima em um ponto
+c) Tensões médias em um plano inclinado
+d) Tensões residuais após descarregamento`,
+    resposta: "b) Tensões normais máxima e mínima em um ponto"
+  },
+  {
+    pergunta: `Ao contrário dos eixos de seção circular, que mantêm sua geometria sob torção, eixos com outras formas de seção transversal apresentam um comportamento distinto quando submetidos a momentos torçores. Em eixos não circulares submetidos à torção, o que acontece com a seção transversal?
+a) Permanece plana
+b) Abaula ou entorta
+c) Expande uniformemente
+d) Não sofre deformação`,
+    resposta: "b) Abaula ou entorta"
+  },
+  {
+    pergunta: `A distribuição de tensões em eixos de seção quadrada sob torção não é uniforme, apresentando valores máximos em locais específicos da seção transversal. Onde ocorre a tensão de cisalhamento máxima em um eixo de seção quadrada sob torção?
+a) Nos cantos
+b) No centro
+c) Na borda mais próxima da linha central
+d) Uniformemente distribuída`,
+    resposta: "c) Na borda mais próxima da linha central"
+  },
+  {
+    pergunta: `A construção correta do Círculo de Mohr requer a adoção de uma convenção específica para representação das tensões cisalhantes, fundamental para interpretação dos resultados. Qual é a convenção de sinal para tensão de cisalhamento positiva no Círculo de Mohr?
+a) Para cima na face direita do elemento
+b) Para baixo no eixo τ
+c) Para a esquerda no eixo σ
+d) Sentido horário`,
+    resposta: "b) Para baixo no eixo τ"
+  },
+  {
+    pergunta: `Um fenômeno de instabilidade estrutural crítico ocorre quando elementos esbeltos submetidos à compressão sofrem uma deformação lateral súbita, independentemente da resistência do material. Na análise estrutural, o termo "flambagem" refere-se principalmente a:
+a) Deformação permanente devido a cargas excessivas
+b) Instabilidade global de uma estrutura devido à compressão
+c) Falha súbita devido à fadiga do material
+d) Deslocamento lateral causado por ventos fortes`,
+    resposta: "b) Instabilidade global de uma estrutura devido à compressão"
+  },
+{
+          pergunta: `Situação problema: Escolha de sistema principal
+Uma viga contínua com três vãos é carregada uniformemente no primeiro vão, e na estrutura existem os seguintes apoios: 2 apoios de 2° gênero e 1 apoio de terceiro gênero, não há presenta de rótulas na viga. Qual é o grau de hiperestaticidade? Escolha um Sistema Principal (SP) e explique como restabelecer as condições de compatibilidade.`,
+          resposta: " "
+        },
+        {
+          pergunta: `Situação Problema: Carga Excêntrica em Coluna
+Uma coluna projetada para carga axial pura acaba recebendo uma carga excêntrica devido a um erro de construção. Quais são os possíveis efeitos dessa excentricidade?`,
+          resposta: " "
+        },
+        {
+          pergunta: `Situação Problema: Coluna com Deformação Lateral
+Uma coluna de aço está apresentando deformação lateral. Qual fenômeno está ocorrendo? Como falhas no processo construtivo contribuíram para esse problema?`,
+          resposta: " "
+	}
+      ],
+      geotecnia: [
+       {
+      pergunta: `Na geologia, um dos três principais grupos de rochas se forma a partir da solidificação de material em altíssimas temperaturas. Esse processo pode ocorrer em diferentes ambientes, resultando em texturas e estruturas variadas. O que são rochas ígneas?
+a) Rochas formadas pela compactação de sedimentos
+b) Rochas resultantes do resfriamento do magma
+c) Rochas formadas pela transformação de outras rochas sob alta pressão e temperatura
+d) Rochas originadas pela precipitação química de minerais`,
+      resposta: "b) Rochas resultantes do resfriamento do magma"
+    },
+    {
+      pergunta: `A velocidade de resfriamento de material fundido influencia significativamente as características físicas das rochas formadas. Essa variação ocorre devido às diferentes condições ambientais durante a solidificação. Qual é a principal diferença entre rochas ígneas intrusivas e extrusivas?
+a) Intrusivas são formadas na superfície, enquanto extrusivas são formadas no interior da Terra
+b) Intrusivas são formadas no interior da Terra, enquanto extrusivas são formadas na superfície
+c) Intrusivas são sempre mais escuras que extrusivas
+d) Extrusivas são sempre mais antigas que intrusivas`,
+      resposta: "b) Intrusivas são formadas no interior da Terra, enquanto extrusivas são formadas na superfície"
+    },
+    {
+      pergunta: `A classificação das rochas ígneas considera sua composição química e mineralógica. Algumas variedades contêm minerais específicos que refletem condições particulares de formação. Qual mineral é comum em rochas ígneas ácidas como o granito?
+a) Olivina
+b) Quartzo
+c) Piroxênio
+d) Calcita`,
+      resposta: "b) Quartzo"
+    },
+    {
+      pergunta: `Um importante grupo de rochas se forma através da acumulação de partículas sólidas. Esses materiais passam por diversos processos naturais antes de se consolidarem. O que são rochas sedimentares clásticas?
+a) Rochas formadas pela precipitação química de minerais
+b) Rochas formadas pelo acúmulo e compactação de sedimentos
+c) Rochas formadas pela transformação de outras rochas sob alta pressão e temperatura
+d) Rochas resultantes do resfriamento do magma`,
+      resposta: "b) Rochas formadas pelo acúmulo e compactação de sedimentos"
+    },
+    {
+      pergunta: `A formação de certos tipos de rochas envolve uma sequência complexa de fenômenos naturais que atuam na superfície terrestre ao longo de extensos períodos. Qual é o principal processo envolvido na formação de rochas sedimentares?
+a) Cristalização do magma
+b) Intemperismo, erosão, transporte e deposição
+c) Fusão parcial de rochas pré-existentes
+d) Recristalização de minerais sob alta pressão`,
+      resposta: "b) Intemperismo, erosão, transporte e deposição"
+    },
+    {
+      pergunta: `A análise de rochas sedimentares revela informações valiosas sobre sua origem. Algumas variedades são particularmente ricas em certos minerais devido a processos seletivos. Qual rocha sedimentar é formada principalmente por grãos de quartzo?
+a) Calcário
+b) Arenito
+c) Folhelho
+d) Carvão`,
+      resposta: "b) Arenito"
+    },
+    {
+      pergunta: `Após a deposição, os materiais sedimentares passam por transformações físicas e químicas que os convertem em rochas sólidas, um processo essencial na litificação. O que é diagênese no contexto das rochas sedimentares?
+a) O processo de fusão de rochas para formar magma
+b) O processo de compactação e cimentação de sedimentos
+c) O processo de transformação de rochas sob alta pressão e temperatura
+d) O processo de resfriamento do magma`,
+      resposta: "b) O processo de compactação e cimentação de sedimentos"
+    },
+    {
+      pergunta: `Algumas rochas se originam através da deposição química de minerais dissolvidos em ambientes aquáticos, criando formações com propriedades distintas. Qual rocha sedimentar é formada pela precipitação química de carbonatos?
+a) Arenito
+b) Calcário
+c) Folhelho
+d) Carvão`,
+      resposta: "b) Calcário"
+    },
+    {
+      pergunta: `No ciclo geológico, as partículas rochosas são transportadas por diversos agentes naturais, cada um contribuindo para a distribuição dos materiais na superfície terrestre. Qual desses agentes é responsável pelo transporte de sedimentos no ciclo das rochas?
+a) Vulcanismo
+b) Magnetismo
+c) Lava
+d) Vento`,
+      resposta: "d) Vento"
+    },
+    {
+      pergunta: `Sob condições específicas de profundidade, as rochas podem sofrer alterações significativas em sua estrutura e composição mineralógica sem passar pelo estado fundido. Qual processo transforma rochas sedimentares em rochas metamórficas?
+a) Fusão
+b) Intemperismo
+c) Pressão e temperatura
+d) Cristalização`,
+      resposta: "c) Pressão e temperatura"
+    },
+    {
+      pergunta: `Quando expostas às condições da superfície terrestre, as rochas sofrem alterações significativas devido à ação de agentes externos. Esses processos modificam sua estrutura e composição ao longo do tempo geológico. O que acontece com rochas ígneas quando expostas à superfície da Terra?
+a) São transformadas em rochas metamórficas
+b) São erodidas e transportadas, formando sedimentos
+c) São fundidas para formar novo magma
+d) São compactadas para formar rochas sedimentares`,
+      resposta: "b) São erodidas e transportadas, formando sedimentos"
+    },
+    {
+      pergunta: `A formação de um dos principais grupos de rochas está diretamente associada a processos que ocorrem em ambientes de altíssimas temperaturas, envolvendo a transformação de materiais fundidos. Qual é o principal processo que forma rochas ígneas?
+a) Intemperismo
+b) Cristalização do magma
+c) Compactação de sedimentos
+d) Metamorfismo`,
+      resposta: "b) Cristalização do magma"
+    },
+    {
+      pergunta: `As características físicas das rochas determinam sua aplicação em engenharia e construção. Uma dessas propriedades está relacionada à resistência a determinados tipos de desgaste superficial. Qual propriedade das rochas está relacionada à resistência ao risco?
+a) Porosidade
+b) Dureza
+c) Permeabilidade
+d) Peso específico`,
+      resposta: "b) Dureza"
+    },
+    {
+      pergunta: `A estrutura interna das rochas apresenta características que influenciam diretamente seu comportamento mecânico e hidráulico. Uma dessas características diz respeito à presença de vazios internos. O que é porosidade em uma rocha?
+a) A capacidade de absorver água
+b) A presença de espaços vazios na rocha
+c) A resistência ao desgaste
+d) A capacidade de reagir com outros compostos químicos`,
+      resposta: "b) A presença de espaços vazios na rocha"
+    },
+    {
+      pergunta: `Algumas rochas apresentam propriedades físicas extremas devido à sua formação em condições geológicas particulares. Essas características as tornam úteis para aplicações específicas. Qual rocha é conhecida por sua alta porosidade?
+a) Granito
+b) Basalto
+c) Pedra-pomes
+d) Mármore`,
+      resposta: "c) Pedra-pomes"
+    },
+    {
+      pergunta: `A capacidade de uma rocha de interagir com fluidos é determinada por uma propriedade física específica, crucial para estudos de reservatórios e obras civis. O que é permeabilidade em uma rocha?
+a) A capacidade de resistir ao risco
+b) A capacidade de permitir a passagem de fluidos
+c) A presença de espaços vazios
+d) A resistência à compressão`,
+      resposta: "b) A capacidade de permitir a passagem de fluidos"
+    },
+    {
+      pergunta: `Diferentes grupos de rochas apresentam comportamentos distintos quanto à circulação de fluidos, refletindo seus processos de formação e características estruturais. Qual é a principal diferença entre rochas ígneas e sedimentares em termos de permeabilidade?
+a) Rochas ígneas são sempre mais permeáveis que sedimentares
+b) Rochas sedimentares são geralmente mais permeáveis que ígneas
+c) Ambas têm a mesma permeabilidade
+d) Rochas ígneas não possuem permeabilidade`,
+      resposta: "b) Rochas sedimentares são geralmente mais permeáveis que ígneas"
+    },
+    {
+      pergunta: `A dinâmica da crosta terrestre inclui processos que modificam radicalmente a topografia, criando estruturas de grande porte através de mecanismos complexos. O termo orogênese caracteriza?
+a) Formação de solos planos
+b) Formação de florestas
+c) Formação de sedimentos
+d) Formação de montanhas`,
+      resposta: "d) Formação de montanhas"
+    },
+    {
+      pergunta: `A transformação das rochas na superfície terrestre ocorre através de diferentes mecanismos, alguns envolvendo apenas processos físicos, enquanto outros incluem alterações químicas. Quais desses tipos de intemperismo não é caracterizado como intemperismo físico:
+a) Gelificação
+b) Expansão térmica
+c) Descompressão
+d) Oxidação`,
+      resposta: "d) Oxidação"
+    },
+    {
+      pergunta: `No processo de formação dos solos, diferentes minerais apresentam resistências variadas aos agentes de intemperismo, influenciando a composição final do material. Qual mineral é o mais estável e resistente ao processo de transformação rocha-solo?
+a) Feldspato
+b) Quartzo
+c) Mica
+d) Calcita`,
+      resposta: "b) Quartzo"
+    },
+    {
+      pergunta: `O intemperismo químico envolve reações que alteram a estrutura dos minerais. Entre esses processos, um em particular se destaca pela incorporação de moléculas de água na rede cristalina dos minerais, causando expansão e desestabilização. Qual é o principal processo químico do intemperismo que envolve a entrada de moléculas de água na estrutura dos minerais?
+a) Oxidação
+b) Hidratação
+c) Carbonatação
+d) Dissolução`,
+      resposta: "b) Hidratação"
+    },
+    {
+      pergunta: `A caracterização dos solos para fins de engenharia considera diversos parâmetros físicos. Um desses parâmetros, obtido através de ensaios de peneiramento e sedimentação, é fundamental para determinar o comportamento mecânico do material. Qual é o principal parâmetro utilizado na classificação textural dos solos?
+a) Limite de liquidez
+b) Granulometria
+c) Índice de plasticidade
+d) Grau de saturação`,
+      resposta: "b) Granulometria"
+    },
+    {
+      pergunta: `O sistema AASHTO classifica solos para pavimentação considerando características específicas. Dentre seus grupos, um em particular inclui materiais granulares com comportamento favorável para construção de bases e sub-bases. No sistema AASHTO, qual grupo representa solos granulares sem finos?
+a) A-1
+b) A-2
+c) A-3
+d) A-4`,
+      resposta: "a) A-1"
+    },
+    {
+      pergunta: `O sistema AASHTO inclui um parâmetro numérico que avalia qualitativamente a capacidade de um solo ser utilizado em camadas de pavimento, considerando suas propriedades físicas. O que é o índice de grupo (IG) no sistema AASHTO?
+a) Um índice que define a capacidade de pavimentação
+b) Um índice que define a permeabilidade do solo
+c) Um índice que define a compressibilidade do solo
+d) Um índice que define a plasticidade do solo`,
+      resposta: "a) Um índice que define a capacidade de pavimentação"
+    },
+    {
+      pergunta: `A compactação é um processo fundamental na preparação de solos para obras civis, visando modificar suas características físicas para melhorar o desempenho estrutural. Qual é o principal objetivo da compactação dos solos?
+a) Aumentar a permeabilidade
+b) Reduzir o índice de vazios
+c) Aumentar o teor de umidade
+d) Reduzir a resistência ao cisalhamento`,
+      resposta: "b) Reduzir o índice de vazios"
+    },
+    {
+      pergunta: `A escolha do equipamento de compactação depende das características do solo. Para certos tipos de materiais coesivos, um equipamento específico é particularmente eficaz devido ao seu mecanismo de ação. Qual é o equipamento mais utilizado para compactação de solos argilosos?
+a) Rolo liso
+b) Rolo pé-de-carneiro
+c) Rolo pneumático
+d) Rolo vibratório`,
+      resposta: "b) Rolo pé-de-carneiro"
+    },
+    {
+      pergunta: `A curva de compactação relaciona a densidade do solo com seu teor de umidade. Um ponto específico nesta curva representa a condição ideal para obtenção da máxima eficiência no processo. O que representa o teor de umidade ótima (w_ótimo) na curva de compactação?
+a) Teor de umidade que resulta na máxima densidade seca
+b) Teor de umidade que resulta na mínima densidade seca
+c) Teor de umidade que resulta na máxima permeabilidade
+d) Teor de umidade que resulta na mínima permeabilidade`,
+      resposta: "a) Teor de umidade que resulta na máxima densidade seca"
+    },
+    {
+      pergunta: `O controle de qualidade em obras de terraplenagem utiliza um indicador que compara a compactação alcançada em campo com os valores obtidos em laboratório sob condições padrão. O que é o grau de compactação (GC)?
+a) Relação entre a densidade seca de campo e a densidade seca máxima do laboratório
+b) Relação entre a densidade seca máxima do laboratório e a densidade seca de campo
+c) Relação entre a densidade úmida de campo e a densidade úmida máxima do laboratório
+d) Relação entre a densidade úmida máxima do laboratório e a densidade úmida de campo`,
+      resposta: "a) Relação entre a densidade seca de campo e a densidade seca máxima do laboratório"
+    },
+    {
+      pergunta: `O movimento da água através dos solos é descrito por um princípio fundamental da mecânica dos solos, que estabelece uma relação linear entre gradiente hidráulico e velocidade de fluxo. Qual é a lei que descreve o fluxo de água através de um solo?
+a) Lei de Darcy
+b) Lei de Hooke
+c) Lei de Bernoulli
+d) Lei de Stokes`,
+      resposta: "a) Lei de Darcy"
+    },
+    {
+      pergunta: `Uma propriedade intrínseca dos solos quantifica sua capacidade de permitir o fluxo de água, sendo crucial para projetos de drenagem e estruturas de contenção. O que representa o coeficiente de permeabilidade (k)?
+a) Facilidade com que a água flui através do solo
+b) Resistência do solo ao fluxo de água
+c) Capacidade do solo de reter água
+d) Quantidade de água que o solo pode absorver`,
+      resposta: "a) Facilidade com que a água flui através do solo"
+    },
+    {
+      pergunta: `31. A medida da permeabilidade dos solos é expressa em unidades do Sistema Internacional que relacionam velocidade com gradiente hidráulico. Qual é a unidade do coeficiente de permeabilidade (k)?
+a) m/s
+b) m²/s
+c) m³/s
+d) h/m`,
+      resposta: "a) m/s"
+    },
+    {
+      pergunta: `Em mecânica dos solos, o movimento da água através dos poros é quantificado por um parâmetro fundamental que relaciona a energia disponível para o fluxo com o caminho percorrido pelo fluido. O que é o gradiente hidráulico (i)?
+a) Relação entre a carga hidráulica e a distância de fluxo
+b) Relação entre a distância de fluxo e a perda de carga
+c) Relação entre a velocidade de fluxo e a perda de carga
+d) Relação entre a perda de carga e a velocidade de fluxo`,
+      resposta: "a) Relação entre a carga hidráulica e a distância de fluxo"
+    },
+    {
+      pergunta: `O comportamento mecânico dos solos saturados é governado por um conceito fundamental que separa os efeitos das tensões aplicadas e da pressão da água nos vazios. O que é a tensão efetiva em um solo?
+a) Tensão total menos a pressão neutra
+b) Tensão total mais a pressão neutra
+c) Tensão total multiplicada pela pressão neutra
+d) Tensão total dividida pela pressão neutra`,
+      resposta: "a) Tensão total menos a pressão neutra"
+    },
+    {
+      pergunta: `Em solos completamente saturados, a água presente nos vazios exerce uma pressão que afeta diretamente o estado tensional do material. O que é a pressão neutra (u) em um solo saturado?
+a) Pressão da água nos vazios do solo
+b) Pressão dos grãos do solo
+c) Pressão total do solo
+d) Pressão do ar nos vazios do solo`,
+      resposta: "a) Pressão da água nos vazios do solo"
+    },
+    {
+      pergunta: `Quando cargas externas são aplicadas à superfície do terreno, as tensões se propagam em profundidade seguindo padrões específicos de distribuição. O que é o bulbo de tensões?
+a) Região do solo onde as tensões são significativamente afetadas por uma carga externa
+b) Região do solo onde as tensões são nulas
+c) Região do solo onde as tensões são máximas
+d) Região do solo onde as tensões são mínimas`,
+      resposta: "a) Região do solo onde as tensões são significativamente afetadas por uma carga externa"
+    },
+    {
+      pergunta: `Antes da execução de obras civis, são realizados estudos para caracterizar adequadamente os materiais do subsolo e prever seu comportamento sob carregamentos. Qual é o principal objetivo das investigações geotécnicas?
+a) Determinar as propriedades do solo e rocha
+b) Determinar a profundidade do lençol freático
+c) Determinar a resistência do solo ao cisalhamento
+d) Determinar a permeabilidade do solo`,
+      resposta: "a) Determinar as propriedades do solo e rocha"
+    },
+    {
+      pergunta: `Entre as diversas técnicas disponíveis para exploração geotécnica, um método simples e amplamente utilizado fornece informações valiosas sobre a resistência e estratigrafia do solo. Qual é o método mais comum de investigação geotécnica?
+a) Sondagem à percussão (SPT)
+b) Sondagem rotativa
+c) Sondagem mista
+d) Sondagem elétrica`,
+      resposta: "a) Sondagem à percussão (SPT)"
+    },
+    {
+      pergunta: `Um dos ensaios geotécnicos mais utilizados fornece um índice numérico que correlaciona a resistência do solo com o número de impactos necessários para avançar um amostrador padrão. O que é o índice de resistência à penetração (SPT)?
+a) Número de golpes necessários para cravar o amostrador padrão 30 cm no solo
+b) Número de golpes necessários para cravar o amostrador padrão 15 cm no solo
+c) Número de golpes necessários para cravar o amostrador padrão 45 cm no solo
+d) Número de golpes necessários para cravar o amostrador padrão 60 cm no solo`,
+      resposta: "a) Número de golpes necessários para cravar o amostrador padrão 30 cm no solo"
+    },
+    {
+      pergunta: `A fração fina dos solos é composta predominantemente por um grupo específico de minerais que conferem propriedades plásticas e coloidais ao material. Qual é o principal mineral que compõe a fração argilosa dos solos?
+a) Quartzo
+b) Feldspato
+c) Argilominerais
+d) Mica`,
+      resposta: "c) Argilominerais"
+    },
+    {
+      pergunta: `A capacidade de um solo permitir o fluxo de água é determinada principalmente por uma característica intrínseca relacionada à sua constituição física. Qual é o principal fator que influencia a permeabilidade dos solos?
+a) Tamanho das partículas
+b) Teor de umidade
+c) Índice de vazios
+d) Grau de saturação`,
+      resposta: "a) Tamanho das partículas"
+    },
+    {
+      pergunta: `A compactação mecânica dos solos visa melhorar simultaneamente várias propriedades geotécnicas importantes para o desempenho de obras de engenharia. Qual é o principal objetivo da compactação dos solos em obras de engenharia?
+a) Aumentar a resistência ao cisalhamento
+b) Reduzir a permeabilidade
+c) Aumentar a densidade do solo
+d) Todas as anteriores`,
+      resposta: "d) Todas as anteriores"
+    },
+    {
+      pergunta: `Em topografia, a determinação de alturas relativas é essencial para projetos de engenharia. Essa referência vertical pode ser estabelecida em relação a diferentes superfícies de referência, dependendo das necessidades do projeto. Qual é a definição de cota em um levantamento altimétrico?
+a) Distância vertical de um ponto ao nível médio dos mares
+b) Distância vertical de um ponto a uma superfície de referência fictícia
+c) Distância horizontal entre dois pontos no terreno
+d) Distância vertical entre dois pontos no terreno`,
+      resposta: "b) Distância vertical de um ponto a uma superfície de referência fictícia"
+    },
+    {
+      pergunta: `Na prática topográfica, é crucial distinguir entre diferentes sistemas de referência vertical, cada um com aplicações específicas em projetos de engenharia e mapeamento. Qual é a principal diferença entre cota e altitude?
+a) Cota é medida em relação ao nível médio dos mares, enquanto altitude é medida em relação a uma superfície fictícia
+b) Cota é medida em relação a uma superfície fictícia, enquanto altitude é medida em relação ao nível médio dos mares
+c) Cota e altitude são sinônimos e representam a mesma medida
+d) Cota é usada apenas em projetos de estradas, enquanto altitude é usada em projetos de redes de esgoto`,
+      resposta: "b) Cota é medida em relação a uma superfície fictícia, enquanto altitude é medida em relação ao nível médio dos mares"
+    },
+    {
+      pergunta: `Um dos métodos mais precisos para determinação de desníveis utiliza um princípio óptico fundamental, baseado na criação de uma linha de visada horizontal. Qual é o princípio básico do nivelamento geométrico?
+a) Medir ângulos horizontais e verticais entre pontos
+b) Determinar a diferença de altura entre dois pontos através de uma visada horizontal
+c) Utilizar equipamentos GPS para determinar coordenadas
+d) Medir distâncias horizontais com uma trena`,
+      resposta: "b) Determinar a diferença de altura entre dois pontos através de uma visada horizontal"
+    },
+    {
+      pergunta: `Os sistemas de referência altimétrica utilizam um modelo físico específico que representa uma superfície equipotencial fundamental para medições precisas. Qual é a função do Geóide em levantamentos altimétricos?
+a) Servir como referência para medidas de latitude e longitude
+b) Representar a superfície média dos mares, usada como referência para altitudes
+c) Ser um modelo matemático que aproxima a forma da Terra
+d) Representar a superfície topográfica do terreno`,
+      resposta: "b) Representar a superfície média dos mares, usada como referência para altitudes"
+    },
+    {
+      pergunta: `A representação do relevo em mapas topográficos utiliza linhas específicas que conectam pontos com uma característica altimétrica comum, permitindo visualizar a tridimensionalidade do terreno. Qual é a principal característica das curvas de nível em um terreno?
+a) Elas se cruzam em pontos de maior altitude
+b) Todos os pontos de uma curva de nível têm a mesma altitude
+c) Elas representam a distância horizontal entre dois pontos
+d) Elas são usadas apenas em terrenos planos`,
+      resposta: "b) Todos os pontos de uma curva de nível têm a mesma altitude"
+    },
+    {
+      pergunta: `A análise da inclinação do terreno é fundamental para projetos de engenharia civil, sendo quantificada através de uma relação matemática específica entre distâncias verticais e horizontais. O que é a declividade de um terreno?
+a) A distância vertical entre dois pontos no terreno
+b) A inclinação da superfície do terreno em relação à horizontal
+c) A diferença de altitude entre dois pontos
+d) A distância horizontal entre dois pontos no terreno`,
+      resposta: "b) A inclinação da superfície do terreno em relação à horizontal"
+    },
+    {
+      pergunta: `Em situações onde o terreno apresenta grandes desníveis ou extensões consideráveis, um método específico de determinação altimétrica se mostra mais adequado que o nivelamento simples. Qual é a finalidade do nivelamento geométrico composto?
+a) Medir distâncias horizontais em terrenos planos
+b) Determinar desníveis em terrenos íngremes ou com grandes distâncias
+c) Calcular coordenadas geográficas usando GPS
+d) Representar curvas de nível em mapas topográficos`,
+      resposta: "b) Determinar desníveis em terrenos íngremes ou com grandes distâncias"
+    },
+    {
+      pergunta: `O estado de tensão em um ponto material é completamente definido quando são conhecidas as tensões em planos orientados de três maneiras distintas. Quantas componentes de tensão independentes são necessárias para definir completamente o estado de tensão em um ponto no caso tridimensional?
+a) 3 componentes
+b) 6 componentes
+c) 9 componentes
+d) 12 componentes`,
+      resposta: "b) 6 componentes"
+    },
+    {
+      pergunta: `A resistência ao cisalhamento dos solos é um parâmetro fundamental para projetos geotécnicos, sendo determinada através de ensaios específicos que simulam condições de campo. Qual é o principal objetivo do ensaio de cisalhamento direto em solos?
+a) Determinar a compressibilidade do solo
+b) Medir a resistência ao cisalhamento sob diferentes tensões normais
+c) Avaliar a permeabilidade do solo
+d) Determinar o teor de umidade ótimo para compactação`,
+      resposta: "b) Medir a resistência ao cisalhamento sob diferentes tensões normais"
+    },
+{
+      pergunta: `Situação Problema: Compactação de Aterro Rodoviário
+Durante a construção de um aterro para uma rodovia, o grau de compactação atingido no campo está consistentemente abaixo de 95% do peso específico seco máximo (γdmax) obtido no ensaio Proctor Normal, mesmo após ajustes na umidade. Portanto com base nos seus conhecimentos de mecânica dos solos:
+• Como você resolveria o problema?
+• Que equipamentos de compactação seriam mais adequados para o solo em questão (argiloso)?`,
+      resposta: ` `
+    },
+    {
+      pergunta: `Situação Problema: Classificação de uma rocha desconhecida
+Durante seu trabalho no laboratório de solos você foi encarregado para identificar a composição de uma rocha, à primeira vista é uma rocha com coloração bastante escura, com uma textura cristalina e retirada da região do Chile, mais especificamente na cordilheira dos Andes. Segundo seus conhecimentos prévios, você caracterizaria essa rocha como ígnea, sedimentar ou metamórfica e o que motivou sua escolha?`,
+      resposta: ` `
+    },
+    {
+      pergunta: `Situação Problema: Erro de Fechamento em Nivelamento
+Um nivelamento geométrico de 1 km apresentou erro de fechamento de 12 mm, acima do tolerável (10 mm). A planilha indica leituras próximas (< 2 m) em algumas estações. Como você identificaria a fonte do erro e corrigiria os dados?`,
+      resposta: ` `
+    },
+    {
+      pergunta: `Situação Problema: Correção de Erro Sistemático em Mira
+Ao conferir um nivelamento topográfico que você tinha efetuado, percebeu-se que a mira estava inclinada 5° em 10 estações. Como corrigir os dados sem refazer o levantamento?`,
+      resposta: ` `
+    },
+    {
+      pergunta: `Situação Problema: Compactação de Solo Arenoso em Pavimentação
+Uma base de estrada com areia grossa (k = 10⁻² cm/s) apresentou baixa densidade após compactação com rolo liso, mesmo após 8 passadas. O teor de umidade estava 2% abaixo do ótimo. Como você melhoraria a compactação desse material?`,
+      resposta: ` `
+    }
+      ],
+      hidricos: [
+    {    
+    pergunta: `Em um projeto de barragem de concreto, onde a estabilidade da estrutura depende do cálculo preciso das forças hidrostáticas, a Lei de Stevin é fundamental para determinar como a pressão varia com a profundidade. Segundo este princípio físico, a pressão hidrostática em um ponto do fluido depende principalmente de:
+a) Área da base e peso específico
+b) Altura da coluna líquida acima do ponto e peso específico do fluido
+c) Volume total do fluido e sua densidade absoluta
+d) Temperatura ambiente e viscosidade dinâmica do fluido`,
+    resposta: "b) Altura da coluna líquida acima do ponto e peso específico do fluido"
+  },
+  {
+    pergunta: `Ao projetar um sistema elevatório hidráulico para uma oficina mecânica, onde uma pequena força aplicada em um pistão deve gerar uma grande força em outro pistão, o princípio de Pascal é essencial. Este princípio estabelece que a pressão aplicada em um fluido confinado:
+a) Aumenta linearmente com a profundidade do fluido
+b) Varia inversamente com a área da seção transversal
+c) Depende do formato geométrico do recipiente
+d) Distribui-se com igual intensidade em todas as direções e pontos do fluido`,
+    resposta: "d) Distribui-se com igual intensidade em todas as direções e pontos do fluido"
+  },
+  {
+    pergunta: `Durante a manutenção preventiva em uma rede de abastecimento de água urbana, os técnicos utilizam manômetros para monitorar as pressões nos diversos pontos da rede. A pressão indicada por esses instrumentos (pressão manométrica) é sempre medida em relação a:
+a) Pressão atmosférica local ao nível do mar
+b) Pressão zero absoluta (vácuo perfeito)
+c) Pressão de vapor do líquido na temperatura ambiente
+d) Pressão relativa mínima do sistema`,
+    resposta: "a) Pressão atmosférica local ao nível do mar"
+  },
+  {
+    pergunta: `Em um laboratório de hidráulica universitário, os estudantes estão aprendendo sobre instrumentos de medição de pressão. O piezômetro, um dos instrumentos mais simples, é particularmente adequado para medir:
+a) Vazões em tubulações industriais
+b) Pressões positivas de pequena magnitude em líquidos
+c) Pressões negativas ou de sucção
+d) Velocidades de escoamento em canais abertos`,
+    resposta: "b) Pressões positivas de pequena magnitude em líquidos"
+  },
+  {
+    pergunta: `Durante o dimensionamento de um sistema de descarga por orifícios para um reservatório de água de resfriamento industrial, é importante classificar corretamente os orifícios. Na hidráulica, um orifício é considerado "pequeno" quando:
+a) Seu diâmetro excede 1/3 da altura da coluna líquida
+b) O número de Reynolds indica escoamento turbulento
+c) Sua área é superior a 10% da superfície livre do líquido
+d) Seu diâmetro é menor que 1/3 da altura da lâmina d'água sobre ele`,
+    resposta: "d) Seu diâmetro é menor que 1/3 da altura da lâmina d'água sobre ele"
+  },
+  {
+    pergunta: `Ao calcular o sistema de drenagem de emergência para um grande reservatório elevado de água potável, os engenheiros aplicam o Teorema de Torricelli para determinar a velocidade de saída pelo orifício de descarga. Este teorema relaciona a velocidade de saída do líquido principalmente com:
+a) A viscosidade dinâmica do fluido armazenado
+b) A altura da coluna líquida acima do centro do orifício
+c) O diâmetro exato do orifício de descarga
+d) A pressão atmosférica local no dia da medição`,
+    resposta: "b) A altura da coluna líquida acima do centro do orifício"
+  },
+  {
+    pergunta: `Em um experimento para determinar as características de escoamento através de orifícios, o coeficiente de contração (Cc) é um parâmetro importante que representa:
+a) A relação entre a velocidade real do jato e a velocidade teórica ideal
+b) A proporção entre a área da seção contraída do jato e a área geométrica do orifício
+c) A perda de carga total através do dispositivo de medição
+d) A relação entre a carga hidráulica e a vazão volumétrica`,
+    resposta: "b) A proporção entre a área da seção contraída do jato e a área geométrica do orifício"
+  },
+  {
+    pergunta: `No projeto de um sistema de drenagem subterrânea para um complexo industrial, os engenheiros especificam orifícios afogados em determinados pontos. Estes orifícios caracterizam-se por descarregar o líquido para:
+a) A atmosfera livre sem nenhuma restrição
+b) Um dispositivo de medição do tipo Venturi
+c) Um meio líquido com superfície livre abaixo do orifício
+d) Uma câmara com válvula de retenção`,
+    resposta: "c) Um meio líquido com superfície livre abaixo do orifício"
+  },
+  {
+    pergunta: `Durante a análise do sistema de bombeamento de uma estação de tratamento de esgoto, o cálculo do número de Reynolds (Re) é essencial para determinar:
+a) Se o escoamento na tubulação será laminar ou turbulento
+b) A pressão absoluta no ponto de sucção da bomba
+c) A vazão volumétrica instantânea do sistema
+d) A altura manométrica total do sistema`,
+    resposta: "a) Se o escoamento na tubulação será laminar ou turbulento"
+  },
+  {
+    pergunta: `Para o cálculo das perdas de energia em uma adutora de água bruta com 5 km de extensão operando em regime turbulento, a equação fundamental utilizada é a de Darcy-Weisbach, que requer o conhecimento prévio do:
+a) Coeficiente C de Hazen-Williams específico para o material
+b) Fator de atrito (f) que depende da rugosidade e do Re
+c) Viscosidade cinemática do fluido na temperatura de operação
+d) Diâmetro interno nominal da tubulação`,
+    resposta: "b) Fator de atrito (f) que depende da rugosidade e do Re"
+  },
+  {
+    pergunta: `Em projetos de sistemas de abastecimento de água urbano, a fórmula de Hazen-Williams é frequentemente empregada no dimensionamento de adutoras por sua simplicidade e eficácia. Esta fórmula foi desenvolvida especificamente para:
+a) Água em escoamento turbulento
+b) Óleos viscosos
+c) Gases em alta pressão
+d) Fluidos compressíveis`,
+    resposta: "a) Água em escoamento turbulento"
+  },
+  {
+    pergunta: `Ao analisar as perdas de energia em sistemas hidráulicos prediais, é essencial considerar que as perdas de carga localizadas ocorrem predominantemente em pontos específicos da instalação, tais como:
+a) Trechos retos aclive
+b) Válvulas ou curvas
+c) Condutos equivalentes
+d) Trechos retos declive`,
+    resposta: "b) Válvulas ou curvas"
+  },
+  {
+    pergunta: `No contexto de reformas em sistemas hidráulicos existentes, o conceito de condutos equivalentes é fundamental para substituições de trechos da rede. Dois condutos são considerados equivalentes quando, transportando a mesma vazão, apresentam:
+a) Mesmo diâmetro
+b) Mesmo material
+c) Mesma perda de carga
+d) Mesmo comprimento`,
+    resposta: "c) Mesma perda de carga"
+  },
+  {
+    pergunta: `Para o dimensionamento de redes de distribuição de água do tipo malhado em áreas urbanas, o cálculo das vazões de distribuição deve ser realizado considerando principalmente:
+a) Comprimento linear
+b) Área abastecida
+c) Número de nós
+d) Diâmetro dos condutos`,
+    resposta: "b) Área abastecida"
+  },
+  {
+    pergunta: `Em sistemas de recalque com derivações paralelas, como os encontrados em grandes instalações industriais, uma característica fundamental da associação de condutos em paralelo é que:
+a) A perda de carga é igual em todos os ramos
+b) A perda de carga é proporcional ao diâmetro
+c) A perda de carga total é a soma das perdas individuais
+d) Não há perda de carga`,
+    resposta: "a) A perda de carga é igual em todos os ramos"
+  },
+  {
+    pergunta: `Nas estações elevatórias de médio e grande porte, as bombas centrífugas são as mais utilizadas devido às suas características operacionais, sendo classificadas como bombas:
+a) Volumétricas
+b) De deslocamento positivo
+c) Alternativas
+d) Dinâmicas`,
+    resposta: "d) Dinâmicas"
+  },
+  {
+    pergunta: `Para a correta seleção de uma bomba em sistemas de abastecimento de água, o cálculo da altura manométrica total (Hmt) deve incluir obrigatoriamente:
+a) Altura geométrica + perdas de carga
+b) Pressão de vapor
+c) Vazão máxima
+d) NPSH requerido`,
+    resposta: "a) Altura geométrica + perdas de carga"
+  },
+  {
+    pergunta: `Durante a operação de sistemas de bombeamento, o fenômeno de cavitação, que pode causar sérios danos aos equipamentos, ocorre quando a pressão na entrada da bomba atinge valores:
+a) Inferior à pressão de vapor do líquido
+b) Igual à pressão atmosférica
+c) Superior à pressão de vapor
+d) Nula`,
+    resposta: "a) Inferior à pressão de vapor do líquido"
+  },
+  {
+    pergunta: `Em aplicações que exigem precisão no controle de vazão, como em dosagem de produtos químicos em estações de tratamento, são normalmente empregadas bombas do tipo volumétrico, como por exemplo:
+a) Centrífuga
+b) De pistão
+c) Axial
+d) Mista`,
+    resposta: "b) De pistão"
+  },
+  {
+    pergunta: `Em sistemas de transporte de fluidos industriais, as bombas de engrenagem se mostram particularmente adequadas para operação com:
+a) Líquidos viscosos
+b) Água em alta pressão
+c) Gases comprimidos
+d) Escoamento livre`,
+    resposta: "a) Líquidos viscosos"
+  },
+  {
+    pergunta: `No dimensionamento de sistemas de bombeamento para poços profundos, a altura geométrica máxima de sucção é fisicamente limitada principalmente por fatores naturais como:
+a) Vazão nominal da bomba instalada
+b) Pressão atmosférica local e pressão de vapor do líquido na temperatura de trabalho
+c) Diâmetro interno da tubulação de sucção
+d) Temperatura ambiente do fluido sendo bombeado`,
+    resposta: "b) Pressão atmosférica local e pressão de vapor do líquido na temperatura de trabalho"
+  },
+  {
+    pergunta: `Durante a operação de uma estação elevatória de água, para prevenir o fenômeno de cavitação que danifica os rotores das bombas, a medida mais eficaz é:
+a) Reduzir a altura estática de sucção da bomba
+b) Aumentar a rotação do rotor da bomba
+c) Utilizar tubulações de sucção mais extensas
+d) Desconsiderar as perdas de carga nos cálculos`,
+    resposta: "a) Reduzir a altura estática de sucção da bomba"
+  },
+  {
+    pergunta: `Em sistemas de adutoras longas onde diferentes trechos de tubulação são interligados sequencialmente, como em redes de abastecimento rural, a perda de carga total do sistema é calculada como:
+a) Soma aritmética das perdas em cada trecho individual
+b) Igual ao valor da maior perda entre os trechos
+c) Média ponderada das perdas individuais
+d) Valor desprezível por se cancelarem mutuamente`,
+    resposta: "a) Soma aritmética das perdas em cada trecho individual"
+  },
+  {
+    pergunta: `No projeto de redes de distribuição de água do tipo ramificado, típicas de zonas rurais, o cálculo das vazões de distribuição é baseado principalmente no:
+a) Área total abastecida pelo sistema
+b) Comprimento linear total da rede instalada
+c) Número de pontos de derivação (nós)
+d) Diámetro nominal dos tubos utilizados`,
+    resposta: "b) Comprimento linear total da rede instalada"
+  },
+  {
+    pergunta: `O famoso experimento realizado por Evangelista Torricelli no século XVII demonstrou de forma prática a existência da:
+a) Conservação de energia em fluidos (Teorema de Bernoulli)
+b) Pressão atmosférica usando uma coluna de mercúrio
+c) Formação de bolsões de vapor (cavitação)
+d) Perda de carga em tubulações`,
+    resposta: "b) Pressão atmosférica usando uma coluna de mercúrio"
+  },
+  {
+    pergunta: `Em laboratórios de hidráulica e sistemas industriais, o manômetro diferencial de tubo em U com mercúrio é um instrumento preciso para medir:
+a) Vazão volumétrica em tempo real
+b) Diferenças de pressão entre dois pontos
+c) Velocidade do fluido em tubulações
+d) Viscosidade dinâmica dos fluidos`,
+    resposta: "b) Diferenças de pressão entre dois pontos"
+  },
+  {
+    pergunta: `Embora úteis para muitas medições, os piezômetros convencionais apresentam limitações quando se trata de medir:
+a) Pressões positivas de pequena magnitude
+b) Níveis de líquido em reservatórios abertos
+c) Pressões negativas (sucção) ou muito elevadas
+d) Variações da pressão atmosférica local`,
+    resposta: "c) Pressões negativas (sucção) ou muito elevadas"
+  },
+  {
+    pergunta: `Os elevadores hidráulicos utilizados em oficinas automotivas e postos de serviço operam baseados no princípio fundamental da hidrostática descoberto por:
+a) Blaise Pascal (Princípio de Pascal)
+b) Simon Stevin (Lei de Stevin)
+c) Evangelista Torricelli (Teorema de Torricelli)
+d) Daniel Bernoulli (Princípio de Bernoulli)`,
+    resposta: "a) Blaise Pascal (Princípio de Pascal)"
+  },
+  {
+    pergunta: `Em cálculos hidráulicos de sistemas de bombeamento, a perda de carga em uma válvula de gaveta quando completamente aberta é considerada:
+a) Desprezível (com coeficiente K ≈ 0,2)
+b) Significativa (com coeficiente K ≈ 10)
+c) Variável em função da vazão instantânea
+d) Nula (K = 0)`,
+    resposta: "a) Desprezível (com coeficiente K ≈ 0,2)"
+  },
+  {
+    pergunta: `A equação de Bernoulli, fundamental na hidrodinâmica clássica, estabelece uma relação matemática entre três importantes grandezas em um fluido ideal sem perdas por atrito:
+a) Pressão estática, velocidade do escoamento e altura geométrica
+b) Viscosidade dinâmica e temperatura do fluido
+c) Diâmetro da tubulação e rugosidade relativa
+d) Vazão volumétrica e área da seção transversal`,
+    resposta: "a) Pressão estática, velocidade do escoamento e altura geométrica"
+  },
+  {
+    pergunta: `Em projetos de sistemas hidráulicos e laboratórios de mecânica dos fluidos, a determinação do ponto de transição entre escoamento laminar e turbulento é crucial para o dimensionamento adequado de tubulações. Essa velocidade crítica é determinada principalmente por qual parâmetro adimensional fundamental?
+a) Número de Reynolds
+b) Pressão atmosférica
+c) Cor do fluido
+d) Material do tubo`,
+    resposta: "a) Número de Reynolds"
+  },
+  {
+    pergunta: `Ao analisar o comportamento de fluidos em dispositivos de medição e sistemas de controle de fluxo, observa-se que um bocal convergente adequadamente projetado provoca quais alterações nas propriedades do fluido que o atravessa?
+a) Velocidade e reduz pressão
+b) Pressão e reduz velocidade
+c) Apenas vazão
+d) Temperatura`,
+    resposta: "a) Velocidade e reduz pressão"
+  },
+  {
+    pergunta: `Para engenheiros que trabalham com diversos tipos de fluidos em diferentes condições de escoamento, qual é a abrangência de aplicação da fórmula Universal de Darcy-Weisbach para cálculo de perda de carga?
+a) Escoamento laminar
+b) Apenas água
+c) Qualquer fluido e regime
+d) Tubos curtos`,
+    resposta: "c) Qualquer fluido e regime"
+  },
+  {
+    pergunta: `Em inspeções de equipamentos hidráulicos e sistemas de bombeamento, quais são os principais efeitos observados quando ocorre o fenômeno da cavitação?
+a) Erosão e ruído
+b) Aumento de pressão
+c) Redução de temperatura
+d) Melhora no rendimento`,
+    resposta: "a) Erosão e ruído"
+  },
+  {
+    pergunta: `Durante a elaboração de projetos e relatórios técnicos em engenharia hidráulica, qual das seguintes unidades NÃO é apropriada para expressar valores de pressão?
+a) Pascal (Pa)
+b) Bar
+c) mca
+d) Pa/m³`,
+    resposta: "d) Pa/m³"
+  },
+  {
+    pergunta: `No estudo do ciclo hidrológico para gestão integrada de recursos hídricos, qual processo natural é responsável pela transferência da água dos corpos hídricos superficiais para a atmosfera?
+a) Infiltração
+b) Evaporação
+c) Percolação
+d) Escoamento superficial`,
+    resposta: "b) Evaporação"
+  },
+  {
+    pergunta: `Em análises comparativas dos principais reservatórios naturais de água no planeta, qual deles apresenta o maior tempo médio de renovação de suas águas?
+a) Rios
+b) Oceanos
+c) Lagos
+d) Águas subterrâneas`,
+    resposta: "b) Oceanos"
+  },
+  {
+    pergunta: `Em hidrologia aplicada à gestão de bacias hidrográficas, como é tecnicamente denominado o componente do escoamento que ocorre através do subsolo e alimenta os cursos d'água mesmo em períodos sem chuva?
+a) Escoamento hipodérmico
+b) Escoamento de base
+c) Escoamento superficial
+d) Escoamento pluvial`,
+    resposta: "b) Escoamento de base"
+  },
+  {
+    pergunta: `Em estudos de drenagem urbana, qual fator explica a resposta hidrológica mais rápida e intensa em áreas urbanizadas comparadas com áreas naturais?
+a) Alta infiltração
+b) Baixa impermeabilização
+c) Alta evapotranspiração
+d) Baixa infiltração`,
+    resposta: "d) Baixa infiltração"
+  },
+  {
+    pergunta: `Na caracterização morfológica de bacias hidrográficas, qual termo técnico designa o ponto onde toda a vazão escoada pela bacia converge e abandona seu território?
+a) Divisor de águas
+b) Exutório
+c) Talvegue
+d) Afluente`,
+    resposta: "b) Exutório"
+  },
+  {
+    pergunta: `Em levantamentos topográficos para delimitação de bacias hidrográficas, qual método utiliza linhas que conectam os pontos de maior altitude ao longo do entorno da bacia?
+a) Delta
+b) Divisores de água
+c) Curva hipsométrica
+d) Isoietas`,
+    resposta: "b) Divisores de água"
+  },
+  {
+    pergunta: `Em análises comparativas da forma de bacias hidrográficas, qual característica hidrológica está associada a bacias com formato mais arredondado?
+a) Maior tempo de concentração
+b) Menor tempo de concentração
+c) Maior escoamento subterrâneo
+d) Menor declividade`,
+    resposta: "b) Menor tempo de concentração"
+  },
+  {
+    pergunta: `Em estudos hidrológicos para caracterização morfológica de bacias hidrográficas, a curva hipsométrica é uma importante ferramenta que representa:
+a) A variação da precipitação ao longo do tempo
+b) A distribuição da área da bacia por faixa de altitude
+c) A densidade de drenagem
+d) O período de retorno das chuvas`,
+    resposta: "b) A distribuição da área da bacia por faixa de altitude"
+  },
+  {
+    pergunta: `Em análises de eventos extremos para projetos de drenagem urbana em cidades brasileiras, qual tipo de precipitação é caracterizado por alta intensidade em curtos períodos, típica de regiões tropicais?
+a) Orográfica
+b) Frontal
+c) Convectiva
+d) Ciclônica`,
+    resposta: "c) Convectiva"
+  },
+  {
+    pergunta: `Para dimensionamento de sistemas de microdrenagem, o cálculo da intensidade de precipitação é fundamental e obtido através da relação entre:
+a) Altura pluviométrica / Duração
+b) Volume / Área
+c) Frequência / Período de retorno
+d) Lâmina d'água / Tempo de concentração`,
+    resposta: "a) Altura pluviométrica / Duração"
+  },
+  {
+    pergunta: `Em análises de risco para projetos hidráulicos, um evento com período de retorno (T) de 10 anos apresenta qual probabilidade anual de ocorrência?
+a) 1%
+b) 10%
+c) 50%
+d) 90%`,
+    resposta: "b) 10%"
+  },
+  {
+    pergunta: `Em estudos de infiltração para projetos de irrigação, a capacidade de infiltração de um solo não saturado varia principalmente conforme:
+a) O solo está saturado
+b) O solo está seco
+c) Há compactação
+d) A vegetação é densa`,
+    resposta: "b) O solo está seco"
+  },
+  {
+    pergunta: `Em análises comparativas de solos para projetos de recarga artificial de aquíferos, qual tipo apresenta naturalmente maior taxa de infiltração?
+a) Argiloso
+b) Arenoso
+c) Siltoso
+d) Rochoso`,
+    resposta: "b) Arenoso"
+  },
+  {
+    pergunta: `Para projetos de barragens de terra, a lei de Darcy que descreve o fluxo de água em meios porosos depende essencialmente:
+a) Apenas da porosidade
+b) Do gradiente hidráulico e condutividade
+c) Da temperatura do solo
+d) Da densidade da vegetação`,
+    resposta: "b) Do gradiente hidráulico e condutividade"
+  },
+{
+    pergunta: `Situação Problema 1: Vazamento em Reservatório de Água
+Um reservatório de abastecimento público apresenta um vazamento não identificado em sua parede lateral, causando desperdício de água. A altura da água no reservatório é de 5 m, e o vazamento está próximo à base. Como identificar e resolver o vazamento sem esvaziar o reservatório?`,
+    resposta: " "
+  },
+  {
+    pergunta: `Situação Problema 2: Baixa Pressão em Rede Predial
+Um prédio residencial de 10 andares sofre com baixa pressão de água nos andares superiores. A tubulação é de aço galvanizado com 20 anos de uso. Como melhorar a pressão sem substituir toda a tubulação?`,
+    resposta: " "
+  },
+  {
+    pergunta: `Situação Problema 3: Cavitação em Bomba Hidráulica
+Uma bomba centrífuga em uma estação de tratamento apresenta ruídos metálicos e queda de rendimento. A altura de sucção é 4 m, e a temperatura da água é 30°C. Como eliminar a cavitação?`,
+    resposta: " "
+  },
+  {
+    pergunta: `Situação Problema 4: Perda de Carga Excessiva em Adutora
+Uma adutora de 1.000 m (PVC, C=140) transporta 25 L/s, mas a perda de carga está acima do projetado (25 mca). Como reduzir a perda de carga sem alterar a vazão?`,
+    resposta: " "
+  },
+{
+  pergunta: `No dimensionamento de redes coletoras de esgoto sanitário conforme a NBR 9649, qual é o diâmetro nominal mínimo estabelecido para garantir adequada capacidade de transporte e evitar obstruções?
+a) 50 mm
+b) 75 mm
+c) 100 mm
+d) 150 mm`,
+  resposta: "c) 100 mm"
+},
+{
+  pergunta: `Em sistemas de drenagem urbana, qual configuração hidráulica transporta conjuntamente águas pluviais e esgotos domésticos na mesma tubulação, sendo comum em cidades mais antigas?
+a) Sistema separador absoluto
+b) Sistema unitário
+c) Sistema condominial
+d) Sistema radial`,
+  resposta: "b) Sistema unitário"
+},
+{
+  pergunta: `Para garantir ventilação adequada e capacidade de transporte em redes coletoras, a NBR 9649 estabelece qual limite máximo para a relação entre altura da lâmina líquida e diâmetro do coletor?
+a) 50% do diâmetro
+b) 75% do diâmetro
+c) 90% do diâmetro
+d) 100% do diâmetro`,
+  resposta: "b) 75% do diâmetro"
+},
+{
+  pergunta: `Visando prevenir a deposição de sólidos e garantir autolimpeza nos coletores, a norma técnica brasileira exige qual valor mínimo para a tensão trativa no fundo da tubulação?
+a) 0,5 Pa
+b) 1,0 Pa
+c) 1,5 Pa
+d) 2,0 Pa`,
+  resposta: "b) 1,0 Pa"
+},
+{
+  pergunta: `Em sistemas de esgotamento sanitário, qual componente da rede tem como função principal receber os efluentes de vários coletores sem permitir ligações diretas ao longo de seu percurso?
+a) Tubulação que recebe ligações prediais diretas
+b) Canalização que intercepta coletores e não recebe ligações prediais em marcha
+c) Dispositivo para tratamento primário de esgoto
+d) Reservatório de água pluvial`,
+  resposta: "b) Canalização que intercepta coletores e não recebe ligações prediais em marcha"
+},
+{
+  pergunta: `Para manutenção e inspeção das redes de esgoto, qual estrutura é instalada em pontos estratégicos permitindo acesso aos coletores?
+a) Dispositivo para inspeção e limpeza da rede
+b) Reservatório de água pluvial
+c) Estrutura para tratamento de esgoto
+d) Tanque de sedimentação`,
+  resposta: "a) Dispositivo para inspeção e limpeza da rede"
+},
+{
+  pergunta: `Considerando as necessidades operacionais e de manutenção, qual é o espaçamento máximo admissível entre estruturas de inspeção em redes coletoras de esgoto?
+a) 50 m
+b) 100 m
+c) 150 m
+d) 200 m`,
+  resposta: "b) 100 m"
+},
+{
+  pergunta: `Em estações elevatórias de esgoto, qual tipo de equipamento é preferencialmente utilizado devido à sua capacidade de manejar fluidos com sólidos em suspensão?
+a) Bomba de pistão
+b) Bomba centrífuga submersa
+c) Bomba de parafuso
+d) Bomba de diafragma`,
+  resposta: "b) Bomba centrífuga submersa"
+},
+{
+  pergunta: `Em projetos de saneamento em comunidades de baixa renda, qual sistema alternativo reduz custos ao instalar os coletores dentro dos lotes?
+a) Sistema onde os coletores são instalados dentro dos lotes, reduzindo custos
+b) Sistema que usa tanques sépticos individuais
+c) Rede coletora com diâmetro mínimo de 300 mm
+d) Sistema exclusivo para indústrias`,
+  resposta: "a) Sistema onde os coletores são instalados dentro dos lotes, reduzindo custos"
+},
+{
+  pergunta: `Para cálculo de vazões em projetos de esgotamento sanitário, qual faixa de infiltração de água no solo é considerada adequada pela NBR 9649?
+a) 0,01 a 0,05 L/(s.km)
+b) 0,05 a 1,0 L/(s.km)
+c) 1,0 a 2,0 L/(s.km)
+d) 2,0 a 5,0 L/(s.km)`,
+  resposta: "b) 0,05 a 1,0 L/(s.km)"
+},
+{
+  pergunta: `Considerando custo-benefício e durabilidade, quais materiais são mais empregados em redes coletoras de esgoto no Brasil?
+a) Aço galvanizado
+b) PVC ou concreto
+c) Cobre
+d) Polipropileno`,
+  resposta: "b) PVC ou concreto"
+},
+{
+  pergunta: `Para dimensionamento hidráulico, qual valor do coeficiente de máxima vazão horária (K2) é recomendado pela norma brasileira para sistemas de esgotamento sanitário?
+a) 1,0
+b) 2,5
+c) 2,0
+d) 1,5`,
+  resposta: "d) 1,5"
+},
+{
+  pergunta: `Em redes coletoras de esgoto, qual dispositivo é instalado especificamente nos pontos iniciais para permitir a inserção de equipamentos de desobstrução?
+a) Dispositivo para introdução de equipamentos de limpeza no início dos coletores
+b) Tanque de tratamento de esgoto
+c) Reservatório de água pluvial
+d) Medidor de vazão`,
+  resposta: "a) Dispositivo para introdução de equipamentos de limpeza no início dos coletores"
+},
+{
+  pergunta: `Visando prevenir deposição de sólidos orgânicos, qual é a velocidade mínima recomendada para escoamento em redes coletoras de esgoto?
+a) 0,3 m/s
+b) 0,6 m/s
+c) 1,0 m/s
+d) 1,5 m/s`,
+  resposta: "b) 0,6 m/s"
+},
+{
+  pergunta: `Em redes de esgoto com problemas de odor, qual condição hidráulica favorece a formação de sulfetos e gases corrosivos?
+a) Condições anaeróbias em trechos com baixa velocidade
+b) Excesso de oxigênio dissolvido
+c) Tubulações muito inclinadas
+d) Presença de cloro no esgoto`,
+  resposta: "a) Condições anaeróbias em trechos com baixa velocidade"
+},
+{
+  pergunta: `Em orçamentos de sistemas de esgotamento sanitário (SES), qual é a participação percentual aproximada dos custos com a rede coletora em relação ao custo total do sistema?
+a) 25%
+b) 50%
+c) 74%
+d) 90%`,
+  resposta: "c) 74%"
+},
+{
+  pergunta: `Problema: Obstrução em Coletor Principal
+Uma rede coletora de PVC (Ø 200 mm) está frequentemente entupida devido ao lançamento irregular de resíduos sólidos (toalhas, plásticos). Como resolver a obstrução e evitar recorrências?`,
+  resposta: " "
+},
+{
+  pergunta: `Problema: Vazão Superior à Capacidade do Emissário
+O emissário (Ø 600 mm) está operando com lâmina d’água de 90% devido ao crescimento populacional não previsto. Quais seriam as medidas possíveis para aumentar a capacidade? Existem maneiras de fazer isso sem a substituição da tubulação?`,
+  resposta: " "
+},
+{
+  pergunta: `Problema: Lançamento Irregular de Água Pluvial
+Moradores conectam calhas à rede de esgoto, causando transbortamentos em chuvas intensas. Como fiscalizar e corrigir essas ligações irregulares? É interessante adicionar essas vazões no dimensionamento?`,
+  resposta: " "
+},
+{
+  pergunta: `Problema: Elevatória em Área de Alagamento
+Uma EEE foi construída em zona inundável e sofre danos elétricos em cheias. Quais adaptações são necessárias para evitar paralisação?`,
+  resposta: ""
+}
+      ],
+      transportes: [
+        {
+    pergunta: `O urbanismo moderno integra conhecimentos de engenharia civil, arquitetura e planejamento territorial para criar cidades funcionais. Profissionais da área desenvolvem soluções para desafios como mobilidade urbana, saneamento básico e ocupação ordenada do solo. O que é urbanismo?
+a) Estudo da organização espacial de uma cidade
+b) Processo de migração rural para áreas urbanas
+c) Construção de edifícios residenciais
+d) Expansão de áreas industriais`,
+    resposta: "a) Estudo da organização espacial de uma cidade"
+  },
+  {
+    pergunta: `O desenvolvimento das cidades ao longo da história foi marcado por transformações tecnológicas e sociais. Engenheiros civis acompanharam essas mudanças, adaptando infraestruturas e sistemas construtivos às novas demandas urbanas. Qual foi o principal fator que acelerou o crescimento das cidades durante a Revolução Industrial?
+a) Migração rural
+b) Expansão agrícola
+c) Redução da população
+d) Diminuição da industrialização`,
+    resposta: "a) Migração rural"
+  },
+  {
+    pergunta: `A engenharia de transportes no Brasil enfrenta o desafio de integrar diferentes modais considerando as dimensões continentais do país. Projetos de infraestrutura precisam avaliar custo-benefício, impacto ambiental e viabilidade técnica. Qual é o modal de transporte mais utilizado no Brasil?
+a) Ferroviário
+b) Rodoviário
+c) Aquaviário
+d) Aéreo`,
+    resposta: "b) Rodoviário"
+  },
+  {
+    pergunta: `Engenheiros de transporte avaliam múltiplos fatores ao projetar sistemas rodoviários, incluindo características geotécnicas do terreno, volume de carga transportada e custos de manutenção a longo prazo. Qual é a principal desvantagem do transporte rodoviário?
+a) Baixa capacidade de carga
+b) Alto custo ambiental
+c) Longas distâncias inviáveis
+d) Todas as anteriores`,
+    resposta: "d) Todas as anteriores"
+  },
+  {
+    pergunta: `Projetos de engenharia de transportes exigem a integração harmoniosa de diversos elementos físicos e operacionais. Essa complexidade aumenta em centros urbanos com alta densidade populacional. Qual é o principal componente do sistema de transporte?
+a) Vias, veículos e terminais
+b) Pedestres e ciclistas
+c) Infraestrutura rural
+d) Redes de comunicação`,
+    resposta: "a) Vias, veículos e terminais"
+  },
+  {
+    pergunta: `Engenheiros de transporte desenvolvem planos diretores que consideram crescimento populacional, desenvolvimento econômico e sustentabilidade ambiental. Esses documentos orientam investimentos em infraestrutura por décadas. Qual é o principal objetivo do planejamento de transportes?
+a) Reduzir a população urbana
+b) Adequar as necessidades de transporte ao desenvolvimento regional
+c) Aumentar a migração rural
+d) Diminuir a infraestrutura`,
+    resposta: "b) Adequar as necessidades de transporte ao desenvolvimento regional"
+  },
+  {
+    pergunta: `A engenharia de tráfego estabelece padrões rigorosos para sinalização horizontal, considerando fatores como visibilidade noturna, resistência à abrasão e compatibilidade com diferentes tipos de pavimento. Qual é a cor da sinalização horizontal que separa fluxos opostos?
+a) Branca
+b) Amarela
+c) Vermelha
+d) Azul`,
+    resposta: "b) Amarela"
+  },
+  {
+    pergunta: `Em cruzamentos semaforizados, os engenheiros de tráfego implementam diversas medidas para garantir a segurança de veículos e pedestres, incluindo marcações específicas no pavimento. Qual é a função da linha de retenção (LRE)?
+a) Indicar o local limite para parar o veículo
+b) Separar fluxos de mesmo sentido
+c) Delimitar ciclovias
+d) Orientar pedestres`,
+    resposta: "a) Indicar o local limite para parar o veículo"
+  },
+  {
+    pergunta: `Projetos de sinalização urbana consideram ergonomia visual, resistência a intempéries e padrões internacionais de comunicação. Engenheiros especificam materiais e dimensões conforme normas técnicas. Qual é a principal característica da sinalização vertical?
+a) Fornecer informações para aumentar a segurança no trânsito
+b) Indicar locais de ultrapassagem por meio de faixas no asfalto
+c) Delimitar o fluxo de veículos
+d) Diminuir a infraestrutura`,
+    resposta: "a) Fornecer informações para aumentar a segurança no trânsito"
+  },
+  {
+    pergunta: `O Manual Brasileiro de Sinalização de Trânsito estabelece critérios técnicos para placas de regulamentação, garantindo uniformidade em todo o território nacional. Engenheiros de tráfego seguem essas diretrizes em projetos urbanos. Qual é a cor do fundo dos sinais de regulamentação?
+a) Vermelho
+b) Branco
+c) Azul
+d) Verde`,
+    resposta: "b) Branco"
+  },
+  {
+    pergunta: `Em vias arteriais e interseções complexas, os engenheiros de tráfego implementam sistemas de orientação visual que consideram a velocidade de aproximação dos veículos e ângulos de visibilidade. Qual é a função das setas direcionais na sinalização horizontal?
+a) Orientar os fluxos de tráfego
+b) Delimitar ciclovias
+c) Indicar áreas de estacionamento
+d) Reduzir a velocidade`,
+    resposta: "a) Orientar os fluxos de tráfego"
+  },
+  {
+    pergunta: `O projeto de Brasília revolucionou o urbanismo brasileiro ao integrar conceitos modernistas de planejamento territorial com soluções inovadoras de infraestrutura. A cidade foi concebida como laboratório de novas técnicas de engenharia civil, desde seu sistema viário até a distribuição setorizada de atividades urbanas. Quem foi o urbanista responsável pelo Plano Piloto de Brasília?
+a) Oscar Niemeyer
+b) Lúcio Costa
+c) Ildefonso Cerdá
+d) Antoni Gaudí`,
+    resposta: "b) Lúcio Costa"
+  },
+  {
+    pergunta: `O traçado urbano da capital federal incorporou princípios aerodinâmicos de circulação, criando um sistema viário hierarquizado que influenciou gerações de engenheiros urbanistas. Sua configuração espacial foi pensada para otimizar os deslocamentos entre setores governamentais, comerciais e residenciais. Qual foi a inspiração para a forma do Plano Piloto de Brasília?
+a) Borboleta
+b) Cruz
+c) Retângulo
+d) Círculo`,
+    resposta: "a) Borboleta"
+  },
+  {
+    pergunta: `Como última capital planejada do século XX no Brasil, Palmas recebeu um sistema viário radial-concêntrico que exigiu soluções avançadas de engenharia de transportes. Seu eixo principal foi dimensionado para suportar o crescimento urbano projetado nas décadas seguintes. Qual foi o principal eixo estruturante do plano urbanístico de Palmas?
+a) Avenida Teotônio Segurado
+b) Avenida JK
+c) Rodovia TO-050
+d) Avenida Perimetral Norte`,
+    resposta: "a) Avenida Teotônio Segurado"
+  },
+  {
+    pergunta: `O planejamento de novas cidades exige adaptação de modelos internacionais às condições locais. Os engenheiros que projetaram Palmas estudaram diversas experiências mundiais de urbanismo para desenvolver soluções adequadas ao cerrado brasileiro. Qual foi a inspiração para o plano urbanístico de Palmas?
+a) Brasília
+b) Barcelona
+c) Almere (Holanda)
+d) Paris`,
+    resposta: "c) Almere (Holanda)"
+  },
+  {
+    pergunta: `O ordenamento territorial é ferramenta fundamental para engenheiros urbanistas, permitindo compatibilizar crescimento econômico com qualidade de vida. Técnicas modernas de zoneamento consideram desde aspectos ambientais até a eficiência dos sistemas de infraestrutura. Qual é o principal objetivo do zoneamento em Palmas?
+a) Regular o uso e ocupação do solo
+b) Promover especulação imobiliária
+c) Diminuir a quantidade de loteamentos
+d) Dividir administrativamente a cidade em região Norte e Sul`,
+    resposta: "a) Regular o uso e ocupação do solo"
+  },
+  {
+    pergunta: `Projetar vias arteriais em cidades planejadas requer estudos detalhados de capacidade viária e projeções de demanda. Engenheiros de transportes utilizam modelos matemáticos para dimensionar essas artérias urbanas que estruturam o desenvolvimento da malha urbana. Qual é a principal via de Palmas que serve como corredor de ocupação de alta densidade?
+a) Avenida LO 09
+b) Avenida Teotônio Segurado
+c) Rodovia TO-050
+d) Avenida NS 15`,
+    resposta: "b) Avenida Teotônio Segurado"
+  },
+  {
+    pergunta: `A engenharia de tráfego contemporânea incorpora tecnologias de IoT e machine learning para otimizar a operação de sistemas semafóricos. Esses avanços permitem maior adaptabilidade às variações de fluxo ao longo do dia. Qual é a principal função dos semáforos inteligentes?
+a) Reduzir o fluxo de veículos
+b) Ajustar o tempo dos semáforos conforme o tráfego
+c) Aumentar a migração rural
+d) Diminuir a infraestrutura`,
+    resposta: "b) Ajustar o tempo dos semáforos conforme o tráfego"
+  },
+  {
+    pergunta: `Sistemas modernos de gestão de mobilidade urbana dependem de redes de sensores que coletam dados em tempo real. Engenheiros de transporte utilizam essas informações para calibrar modelos de simulação e melhorar a eficiência das redes viárias. Qual é a principal função dos detectores de tráfego?
+a) Detectar a demanda do tráfego
+b) Otimizar o tráfego Urbano
+c) Contabilizar apenas os carros do tráfego
+d) Contabilizar os semáforos da cidade`,
+    resposta: "a) Detectar a demanda do tráfego"
+  },
+  {
+    pergunta: `A normatização de sinalização para modos não motorizados é desafio constante para engenheiros de tráfego. As especificações técnicas consideram fatores como visibilidade noturna, durabilidade do material e integração com outros elementos viários. Qual é a cor da sinalização horizontal que delimita ciclovias?
+a) Vermelha
+b) Branca
+c) Amarela
+d) Azul`,
+    resposta: "a) Vermelha"
+  },
+  {
+    pergunta: `Elementos de sinalização horizontal são projetados para comunicar regras de trânsito de forma imediata e universal. Engenheiros de transporte determinam sua aplicação com base em estudos de comportamento do usuário e padrões internacionais de segurança viária. Qual é a função da linha de "Dê a preferência" (LDP)?
+a) Indicar o local limite para parar o veículo
+b) Separar fluxos de mesmo sentido
+c) Delimitar ciclovias
+d) Orientar pedestres`,
+    resposta: "a) Indicar o local limite para parar o veículo"
+  },
+  {
+    pergunta: `Em projetos de engenharia de tráfego, a comunicação visual eficiente é crucial para a segurança nas vias. Elementos como marcações direcionais são dimensionados considerando velocidade de aproximação, ângulos de visão e condições climáticas locais. Qual é a função das setas direcionais na sinalização horizontal?
+a) Orientar os fluxos de tráfego
+b) Delimitar ciclovias
+c) Indicar áreas de estacionamento
+d) Reduzir a velocidade`,
+    resposta: "a) Orientar os fluxos de tráfego"
+  },
+  {
+    pergunta: `Em projetos de engenharia de transportes, a eficiência do sistema depende da integração de elementos físicos e operacionais. Esses componentes são dimensionados para atender a demandas de mobilidade, segurança e capacidade de carga, seguindo normas técnicas e estudos de tráfego. Qual é o principal componente do sistema de transporte?
+a) Vias, veículos e terminais.
+b) Pedestres e ciclistas.
+c) Semáforos e placas.
+d) Sinalizações Horizontais e Verticais.`,
+    resposta: "a) Vias, veículos e terminais."
+  },
+  {
+    pergunta: `A engenharia de transportes avalia criticamente cada modal, considerando custos logísticos, impactos ambientais e eficiência energética. O modal rodoviário, embora predominante no Brasil, apresenta limitações que exigem soluções inovadoras em infraestrutura e gestão. Quais das alternativas abaixo são desvantagens do transporte rodoviário?
+a) Baixa capacidade de carga.
+b) Alto custo ambiental.
+c) Longas distâncias inviáveis.
+d) Todas as anteriores.`,
+    resposta: "d) Todas as anteriores."
+  },
+  {
+    pergunta: `O processo de urbanização acelerada desafia engenheiros civis a desenvolver cidades sustentáveis, com infraestrutura capaz de suportar alta densidade populacional. Países com rápida industrialização enfrentam demandas críticas por habitação, transporte e saneamento. Qual é o país com a maior taxa de urbanização no mundo?
+a) China.
+b) Índia.
+c) Estados Unidos.
+d) Japão.`,
+    resposta: "a) China."
+  },
+  {
+    pergunta: `Megacidades exigem planejamento urbano complexo, envolvendo sistemas de transporte de alta capacidade, gestão de recursos hídricos e edifícios multifuncionais. Engenheiros civis trabalham com modelos de crescimento vertical e horizontal para otimizar o espaço. Qual é a principal característica das megacidades?
+a) População superior a 10 milhões de habitantes.
+b) Ter mais de 80% das vias pavimentadas.
+c) Conter edificações com elevadas altitudes.
+d) Grande extensão territorial sem considerar população.`,
+    resposta: "a) População superior a 10 milhões de habitantes."
+  },
+  {
+    pergunta: `A sinalização horizontal é projetada para garantir segurança e fluidez no tráfego, utilizando cores padronizadas internacionalmente. Engenheiros de tráfego definem essas marcações com base em estudos de visibilidade e comportamento dos usuários. Qual cor é utilizada para separar movimentos veiculares de fluxos opostos?
+a) Branca
+b) Amarela
+c) Vermelha
+d) Azul`,
+    resposta: "b) Amarela"
+  },
+  {
+    pergunta: `A largura das linhas de retenção (LRE) segue especificações do Manual Brasileiro de Sinalização de Trânsito, garantindo visibilidade adequada em diferentes condições climáticas e velocidades. Qual é a largura mínima recomendada para a Linha de Retenção (LRE)?
+a) 5 cm
+b) 60 cm
+c) 30 cm
+d) 80 cm`,
+    resposta: "c) 30 cm"
+  },
+  {
+    pergunta: `Linhas de divisão de fluxos são essenciais em vias de alta velocidade, onde ultrapassagens indevidas aumentam o risco de acidentes. Projetos de engenharia de tráfego utilizam essas marcações para restringir manobras perigosas. O que a Linha de Divisão de Fluxos Opostos (LFO-1) indica?
+a) Permite a ultrapassagem em ambos os sentidos.
+b) Proíbe a ultrapassagem e os deslocamentos laterais.
+c) Indica uma faixa exclusiva para ônibus.
+d) Delimita uma área de estacionamento.`,
+    resposta: "b) Proíbe a ultrapassagem e os deslocamentos laterais."
+  },
+  {
+    pergunta: `Em corredores de transporte público, a marcação de faixas exclusivas (MFE) é estratégia para melhorar a eficiência do sistema. Engenheiros de mobilidade urbana definem essas áreas com base em estudos de demanda e capacidade viária. Qual é a função da Marcação de Faixa Exclusiva (MFE)?
+a) Delimitar áreas de estacionamento.
+b) Indicar faixas de uso exclusivo para determinada espécie ou categoria de veículo.
+c) Regular a velocidade dos veículos.
+d) Orientar pedestres em travessias.`,
+    resposta: "b) Indicar faixas de uso exclusivo para determinada espécie ou categoria de veículo."
+  },
+  {
+    pergunta: `A sinalização de preferência em cruzamentos visa reduzir conflitos entre veículos e pedestres. Projetos de engenharia de tráfego incluem essas marcações para otimizar a segurança em interseções não semaforizadas. O que a Linha de "Dê a preferência" (LDP) indica ao condutor?
+a) O local onde deve parar o veículo, quando necessário.
+b) A velocidade máxima permitida na via.
+c) A proibição de estacionamento.
+d) A existência de uma ciclovia.`,
+    resposta: "a) O local onde deve parar o veículo, quando necessário."
+  },
+  {
+    pergunta: `Ciclofaixas são dimensionadas para garantir segurança e conforto aos ciclistas, integrando-se ao sistema viário existente. Engenheiros urbanistas seguem padrões internacionais para largura e sinalização dessas vias. Qual é a largura mínima recomendada para uma ciclofaixa de sentido único?
+a) 1,00 m
+b) 1,50 m
+c) 2,00 m
+d) 2,50 m`,
+    resposta: "b) 1,50 m"
+  },
+  {
+    pergunta: `Áreas de conflito são identificadas em projetos de engenharia de tráfego para prevenir congestionamentos e acidentes. Essas marcações alertam os condutores sobre zonas de risco, como entroncamentos e pontos de mergulho. O que a Marcação de Área de Conflito (MAC) indica?
+a) Área onde é permitido o estacionamento.
+b) Área onde não devem parar os veículos, prejudicando a circulação.
+c) Área destinada à travessia de pedestres.
+d) Área de uso exclusivo para ciclistas.`,
+    resposta: "b) Área onde não devem parar os veículos, prejudicando a circulação."
+  },
+  {
+    pergunta: `Em projetos de engenharia de tráfego, a altura das legendas em placas de sinalização é calculada para garantir visibilidade adequada aos motoristas, considerando fatores como velocidade da via, ângulo de visão e condições ambientais. Qual é a altura mínima recomendada para legendas em vias urbanas com velocidade regulamentada de até 80 km/h?
+a) 1,00 m
+b) 1,60 m
+c) 2,00 m
+d) 2,40 m`,
+    resposta: "b) 1,60 m"
+  },
+  {
+    pergunta: `A padronização de formas e cores na sinalização vertical segue critérios internacionais para facilitar o reconhecimento rápido por parte dos condutores, reduzindo acidentes. Qual é a forma padrão dos sinais de advertência?
+a) Circular
+b) Retangular
+c) Quadrada com uma diagonal na vertical
+d) Triangular`,
+    resposta: "d) Triangular"
+  },
+  {
+    pergunta: `As cores das placas de trânsito são definidas para transmitir mensagens específicas: advertência , regulamentação e informação . Qual cor predominante no fundo das placas de advertência?
+a) Vermelho
+b) Amarelo
+c) Azul
+d) Verde`,
+    resposta: "b) Amarelo"
+  },
+  {
+    pergunta: `Sinais como o A-6 ("Cruzamento de vias") são posicionados estrategicamente para alertar sobre interseções potencialmente perigosas, especialmente em vias de maior velocidade. O sinal A-6 ("Cruzamento de vias") deve ser utilizado em vias:
+a) Semafóricas
+b) Rurais ou urbanas de grande extensão
+c) Exclusivas para pedestres
+d) Com limite de velocidade abaixo de 30 km/h`,
+    resposta: "b) Rurais ou urbanas de grande extensão"
+  },
+  {
+    pergunta: `A representação de semáforos em placas de advertência segue as cores padrão do sistema de sinalização luminosa para manter a consistência visual. O sinal A-14 ("Semáforo à frente") possui qual cor em seu símbolo?
+a) Vermelho, verde e amarelo
+b) Azul e branco
+c) Preto e branco
+d) Laranja e preto`,
+    resposta: "a) Vermelho, verde e amarelo"
+  },
+  {
+    pergunta: `Sinais específicos como a "Cruz de Santo André" são obrigatórios em passagens de nível para alertar sobre o risco de colisão com trens. O sinal A-41 ("Cruz de Santo André") é utilizado em:
+a) Áreas escolares
+b) Cruzamentos rodoferroviários
+c) Obras na pista
+d) Declives acentuados`,
+    resposta: "b) Cruzamentos rodoferroviários"
+  },
+  {
+    pergunta: `A sinalização de pista escorregadia é ativada em situações temporárias (chuva, óleo) ou permanentes (trechos conhecidos por baixo atrito). O sinal A-28 ("Pista escorregadia") é usado quando a pista está:
+a) Com areia
+b) Molhada ou com substâncias escorregadias
+c) Com muito atrito
+d) Somente em localidades de clima úmido`,
+    resposta: "b) Molhada ou com substâncias escorregadias"
+  },
+  {
+    pergunta: `O ângulo de instalação de placas como o A-45 é calculado para maximizar a visibilidade em curvas ou vias sinuosas. O sinal A-45 ("Rua sem saída") deve ser posicionado:
+a) No meio da via
+b) Em ângulo de até 45° em relação ao eixo da via
+c) Suspenso sobre a pista
+d) Apenas em áreas rurais`,
+    resposta: "b) Em ângulo de até 45° em relação ao eixo da via"
+  },
+  {
+    pergunta: `A sinalização específica para ciclovias busca harmonizar a convivência entre modais, especialmente em áreas não semafóricas. O sinal A-30b ("Passagem sinalizada de ciclistas") é utilizado em:
+a) Ciclovias semafóricas
+b) Ciclovias ou ciclofaixas não semafóricas
+c) Vias compartilhadas com pedestres
+d) Estradas rurais`,
+    resposta: "b) Ciclovias ou ciclofaixas não semafóricas"
+  },
+  {
+    pergunta: `A instalação de sinais como o A-32b é determinada por estudos de engenharia de tráfego que avaliam risco e visibilidade em faixas de pedestres. O sinal A-32b ("Passagem sinalizada de pedestres") é obrigatório em áreas urbanas quando:
+a) Há semáforo
+b) A faixa de pedestres é de difícil percepção
+c) A via é estreita
+d) Há trânsito de ciclistas`,
+    resposta: "b) A faixa de pedestres é de difícil percepção"
+  },
+{
+    pergunta: `Problema 1: Congestionamentos em Vias Principais
+Uma avenida principal da cidade de Aparecida de Goiânia sofre com congestionamentos diários, especialmente nos horários de pico, devido ao alto volume de veículos e semáforos mal sincronizados. De qual maneira você iria estudar esse tráfego e quais soluções podem ser viáveis para resolução desse problema?`,
+    resposta: " "
+  },
+  {
+    pergunta: `Problema 2: Baixa Utilização de Modais Sustentáveis
+O prefeito de uma cidade quer promover uma diminuição na utilização de automóveis na cidade a fim de diminuir o índice de poluentes gerado por eles e diminuir o grande trafego na cidade. Apesar da existência de ciclovias, poucos moradores usam bicicletas devido à falta de segurança e integração. Com seus conhecimentos de planejamento urbano, apresente algumas possíveis soluções para esses problemas.`,
+    resposta: " "
+  },
+  {
+    pergunta: `Problema 3: Obras em via movimentada
+Você é o engenheiro responsável pela organização e planejamento das vias de uma cidade, em um certo dia o prefeito da cidade chega até você com a proposta de revitalização de uma via arterial da cidade de longa extensão. Ao analisar os estudos de tráfegos dessa via você percebe que o volume médio diário é elevado e as vias mais próximas não estão preparadas para receber esse fluxo. Quais alternativas você buscaria para resolver essa situação e minimizar os engarrafamentos ao longo do trecho?`,
+    resposta: " "
+  },
+  {
+    pergunta: `Problema 4: Acidentes numa via
+Em Gurupi há um cruzamento ao longo da Avenida Goiás que está tendo um grande problema com acidentes de trânsito. Ao chegar no local é notado que o cruzamento não há semáforos, tem um grande fluxo de carros, motos e bicicletas porém não há um fluxo notável de caminhões. A sinalização do local é bem precária, causando confusão para habitantes de fora da cidade que não conhecem qual é a via preferencial. Portanto, você é designado para promover melhorias para o fluxo dessa via, quais estudos e possíveis alternativas você adotaria para melhorar o fluxo de veículos no local.`,
+    resposta: " "
+  },
+  {
+    pergunta: `Problema 5: Semáforo Mal dimensionado
+Em uma via de Palmas – TO, há um semáforo causando transtornos, no sentindo norte-sul há uma demanda maior que no sentido leste oeste. O semáforo já apresenta um tempo de verde para o sentido norte-sul 2 segundos maior que o leste-oeste, contudo o ainda há presença de engarrafamentos e enquanto na via menos movimentada há uma retenção muito pequena de veículos. A partir disso, explique como você faria o estudo dessa via e qual poderia ser a melhor alternativa para dimensionar esse semáforo.`,
+    resposta: " "
+  },
+  {
+    pergunta: `Problema 6: Modelagem de Demanda de Transporte
+A cidade de Alphaville está enfrentando um problema de congestionamento crescente devido ao aumento da população e maior dependência de veículos particulares. O departamento de transporte urbano deseja aplicar uma modelagem de demanda de transporte para desenvolver estratégias eficazes que melhorem a mobilidade urbana. Com base nos conceitos de modelagem de demanda de transportes urbanos, qual seria a ação mais apropriada para reduzir o congestionamento e melhorar a eficiência do sistema de transporte.`,
+    resposta: " "
+  },
+  {
+    pergunta: `Problema 7: Alternativas de Transporte Sustentável
+A mobilidade nas cidades é fator preponderante na qualidade de vida dos cidadãos. O modelo de circulação de pessoas e cargas dentro do território urbano interfere no desenvolvimento econômico do município. A falta de qualidade do transporte público coletivo, por sua vez, faz crescer a migração dos usuários para um transporte individual. A partir disso indique 2 meios de transportes que são alternativas para redução do impacto ambiental gerado por essa migração.`,
+    resposta: " "
+  },
+{
+  pergunta: `O DNIT estabelece critérios técnicos para classificação de rodovias, considerando fatores operacionais e geográficos que impactam diretamente no projeto de engenharia. Esses parâmetros orientam desde o dimensionamento da pista até a seleção de materiais para pavimentação. Qual é o principal critério para a classificação técnica de rodovias segundo o DNIT?
+a) Tipo de pavimento
+b) Volume de tráfego e relevo da região
+c) Número de faixas
+d) Custo de construção`,
+  resposta: "b) Volume de tráfego e relevo da região"
+},
+{
+  pergunta: `Engenheiros de infraestrutura categorizam o relevo para definir curvas verticais, inclinações e técnicas de terraplenagem. Essa classificação influencia diretamente nos custos e métodos construtivos. Como é classificada uma região com declividades entre 8% e 20%?
+a) Plana
+b) Ondulada
+c) Montanhosa
+d) Escarpada`,
+  resposta: "b) Ondulada"
+},
+{
+  pergunta: `A classe de uma rodovia determina suas características técnicas, como largura das faixas e capacidade de tráfego. Essa definição é baseada em estudos de demanda e projeções de crescimento populacional. Qual classe de projeto é recomendada para uma rodovia com demanda de 700 vpd?
+a) Classe I
+b) Classe II
+c) Classe III
+d) Classe IV`,
+  resposta: "b) Classe II"
+},
+{
+  pergunta: `A velocidade diretriz é um parâmetro fundamental no projeto geométrico de rodovias, afetando o raio de curvas e distâncias de visibilidade. Em regiões montanhosas, esse valor é ajustado para garantir segurança. Qual é a velocidade diretriz mínima para uma rodovia Classe I em terreno montanhoso?
+a) 60 km/h
+b) 80 km/h
+c) 100 km/h
+d) 40 km/h`,
+  resposta: "a) 60 km/h"
+},
+{
+  pergunta: `Rodovias arteriais são planejadas para integrar regiões estratégicas, exigindo estudos detalhados de engenharia de tráfego e conexões com outros modais de transporte. O que define uma rodovia do sistema arterial principal?
+a) Liga pequenas localidades
+b) Oferece acesso a áreas rurais
+c) Conecta capitais e cidades com mais de 150.000 habitantes
+d) Possui apenas uma pista simples`,
+  resposta: "c) Conecta capitais e cidades com mais de 150.000 habitantes"
+},
+{
+  pergunta: `O abaulamento é calculado com base em critérios hidrológicos para evitar acúmulo de água na pista, que pode causar aquaplanagem e degradação prematura do pavimento. Qual é a função principal do abaulamento em uma rodovia?
+a) Melhorar a estética
+b) Facilitar o escoamento de águas pluviais
+c) Reduzir o custo de construção
+d) Aumentar a velocidade diretriz`,
+  resposta: "b) Facilitar o escoamento de águas pluviais"
+},
+{
+  pergunta: `A distância de visibilidade de parada é um parâmetro crítico no projeto de curvas verticais e horizontais, calculado considerando tempo de reação do motorista e coeficiente de atrito pneu-pavimento. O que é a distância de visibilidade de parada?
+a) Distância para ultrapassar outro veículo
+b) Distância para perceber um obstáculo e parar o veículo
+c) Distância entre duas curvas consecutivas
+d) Distância mínima entre placas de sinalização`,
+  resposta: "b) Distância para perceber um obstáculo e parar o veículo"
+},
+{
+  pergunta: `Seções mistas exigem técnicas específicas de compactação e drenagem para evitar assentamentos diferenciais, sendo comum em regiões com variações acentuadas de topografia. O que caracteriza uma seção transversal mista?
+a) Apenas corte
+b) Apenas aterro
+c) Parte em corte e parte em aterro
+d) Com cortes e presença de túneis`,
+  resposta: "c) Parte em corte e parte em aterro"
+},
+{
+  pergunta: `A largura de acostamentos em rodovias Classe I é definida para permitir paradas de emergência e tráfego de veículos de manutenção, além de contribuir para a segurança em ultrapassagens. Qual é a largura mínima recomendada para acostamentos em rodovias Classe I em terreno plano?
+a) 1,50 m
+b) 0,80 m
+c) 3,00 m
+d) 6,00 m`,
+  resposta: "c) 3,00 m"
+},
+{
+  pergunta: `Empréstimos laterais são fontes de material para aterros estrategicamente posicionadas para reduzir custos de transporte, exigindo análise geotécnica prévia para garantir qualidade. O que são empréstimos laterais?
+a) Escavações fora da faixa de domínio
+b) Áreas de despejo de entulho
+c) Depósitos de material não utilizado
+d) Escavações próximas aos cortes ou aterros`,
+  resposta: "d) Escavações próximas aos cortes ou aterros"
+},
+{
+  pergunta: `A compactação de solos argilosos exige equipamentos específicos devido à sua alta coesão e baixa permeabilidade. A escolha do equipamento adequado impacta diretamente na resistência e estabilidade do aterro. Qual equipamento é mais indicado para compactação de solos argilosos?
+a) Rolo liso
+b) Rolo pé-de-carneiro
+c) Placa vibratória
+d) Rolo pneumático`,
+  resposta: "b) Rolo pé-de-carneiro"
+},
+{
+  pergunta: `Em terraplenagem, o fator de empolamento é crucial para cálculo de volumes de material escavado e transporte, influenciando diretamente no planejamento logístico e custos da obra. O que é o fator de empolamento?
+a) Aumento do volume após escavação
+b) Redução do volume após compactação
+c) Relação entre volume natural e compactado
+d) Medida de resistência do solo`,
+  resposta: "a) Aumento do volume após escavação"
+},
+{
+  pergunta: `Em aterros sobre solos moles, as bermas de equilíbrio são estruturas essenciais para distribuir cargas e prevenir rupturas, garantindo a estabilidade geotécnica da obra. Qual é a principal função das bermas de equilíbrio?
+a) Melhorar a drenagem
+b) Reduzir o custo de construção
+c) Evitar rupturas em aterros sobre solos moles
+d) Aumentar a velocidade de compactação`,
+  resposta: "c) Evitar rupturas em aterros sobre solos moles"
+},
+{
+  pergunta: `A classificação de materiais em terraplenagem define os métodos de escavação e custos. Materiais de 3ª categoria exigem técnicas especiais devido à presença de rochas duras. O que caracteriza um material de 3ª categoria em terraplenagem?
+a) Solo natural sem rochas
+b) Rochas com uso contínuo de explosivos
+c) Material orgânico
+d) Solo compactado`,
+  resposta: "b) Rochas com uso contínuo de explosivos"
+},
+{
+  pergunta: `No traçado de rodovias, pontos obrigados são determinados por fatores técnicos (como interseções ou travessias de rios) ou socioeconômicos (acesso a comunidades). O que é um ponto obrigado de passagem em um traçado?
+a) Local que deve ser evitado por questões ambientais
+b) Ponto que deve ser atingido por razões técnicas
+c) Área de preservação permanente
+d) Trecho com alto custo de construção`,
+  resposta: "b) Ponto que deve ser atingido por razões técnicas"
+},
+{
+  pergunta: `A fase de reconhecimento em projetos viários compara alternativas de traçado considerando topografia, custos e impactos ambientais, definindo a diretriz mais viável. Qual é o objetivo da etapa de reconhecimento em estudos de traçado?
+a) Definir o projeto executivo
+b) Escolher a diretriz mais viável técnica e economicamente
+c) Realizar a locação da obra
+d) Calcular volumes de corte e aterro`,
+  resposta: "b) Escolher a diretriz mais viável técnica e economicamente"
+},
+{
+  pergunta: `Gargantas são depressões naturais em linhas de cumeada que podem ser aproveitadas no traçado para reduzir volumes de corte e aterro, otimizando o projeto. O que é uma garganta em um traçado?
+a) Ponto mais alto de uma montanha
+b) Depressão acentuada em uma linha de cumeada
+c) Área alagadiça
+d) Trecho reto entre curvas`,
+  resposta: "b) Depressão acentuada em uma linha de cumeada"
+},
+{
+  pergunta: `Tangentes longas podem causar monotonia ao motorista e aumentar o risco de acidentes, sendo desaconselhadas pelo DNIT em projetos rodoviários. Qual é a recomendação do DNIT para tangentes longas em rodovias?
+a) Devem ser evitadas
+b) Devem ter no mínimo 5 km
+c) São obrigatórias em regiões planas
+d) Devem ser sempre utilizadas`,
+  resposta: "a) Devem ser evitadas"
+},
+{
+  pergunta: `O sistema de numeração das rodovias brasileiras segue padrões estabelecidos pelo DNIT, onde o prefixo "BR" identifica as vias federais, seguidas por dígitos que indicam sua orientação geográfica e importância. Qual é o significado do prefixo "BR" na nomenclatura das rodovias brasileiras?
+a) Brasil Rodovia
+b) Brasília Radial
+c) Brasil Rota
+d) Brasil Rede`,
+  resposta: "a) Brasil Rodovia"
+},
+{
+  pergunta: `As rodovias radiais partem de Brasília em direção aos estados, sendo numeradas de BR-010 a BR-080. A BR-040 conecta a capital federal ao Rio de Janeiro, exemplificando essa categoria. A BR-040 é uma rodovia federal que se identifica como:
+a) Longitudinais (norte-sul)
+b) Radiais (partem de Brasília)
+c) Transversais (leste-oeste)
+d) Diagonais (NE-SO ou NO-SE)`,
+  resposta: "b) Radiais (partem de Brasília)"
+},
+{
+  pergunta: `Rodovias transversais cortam o país na direção leste-oeste, com numeração iniciando em BR-2XX. A BR-230 é um exemplo emblemático, atravessando a região Norte. A rodovia BR-230 é classificada como:
+a) Radiais
+b) Longitudinais
+c) Transversais (leste-oeste)
+d) De ligação`,
+  resposta: "c) Transversais (leste-oeste)"
+},
+{
+  pergunta: `As rodovias transversais integram regiões distantes no sentido leste-oeste, como a BR-230 (Transamazônica), crucial para o escoamento de produção e conexão de áreas isoladas. Qual das seguintes rodovias é um exemplo de rodovia transversal?
+a) BR-040 (Brasília-RJ)
+b) BR-116 (Fortaleza-Jaguarão)
+c) BR-230 (Transamazônica)
+d) BR-101 (Litorânea)`,
+  resposta: "c) BR-230 (Transamazônica)"
+},
+{
+  pergunta: `O sistema de numeração das rodovias federais não utiliza a faixa BR-5XX, limitando-se a categorias específicas (radiais, longitudinais, transversais, diagonais e de ligação). Uma rodovia com numeração BR-5XX indicaria que ela é:
+a) Radial
+b) Longitudinal
+c) Transversal
+d) Não existe essa nomenclatura`,
+  resposta: "d) Não existe essa nomenclatura"
+},
+{
+  pergunta: `Situação Problema: Conflito entre Traçado e Meio Ambiente
+O traçado de uma nova rodovia corta uma área de preservação permanente (APP) com nascentes. Como conciliar a obra com a legislação ambiental?`,
+  resposta: " "
+},
+{
+  pergunta: `Situação Problema: Pavimento Danificado por Infiltração de Água
+Você foi contratado para a manutenção de uma via que apresenta trincas e afundamentos frequentes em um trecho onde o lençol freático está próximo da superfície. Como evitar novos danos no pavimento?`,
+  resposta: " "
+}
+  	]
+    };
+
+    let currentCategory = null;
+    let currentQuestion = null;
+
+    function selectCategory(category) {
+      currentCategory = category;
+      document.getElementById("questionTitle").innerText = `Categoria: ${capitalize(category)}`;
+      document.getElementById("questionText").innerText = "Clique em 'Sortear Pergunta' para ver uma pergunta.";
+      document.getElementById("answerText").style.display = 'none';
+      
+      // Remove todas as classes de cor existentes
+      const questionBox = document.getElementById("questionBox");
+      questionBox.classList.remove(
+        'construcao-bg', 
+        'estruturas-bg', 
+        'geotecnia-bg', 
+        'hidricos-bg', 
+        'transportes-bg'
+      );
+      
+      // Adiciona a classe correspondente à categoria selecionada
+      questionBox.classList.add(`${category}-bg`);
+    }
+
+    // As funções drawQuestion(), showAnswer() e capitalize() permanecem exatamente iguais
+    function drawQuestion() {
+      if (!currentCategory) {
+        alert("Selecione uma categoria primeiro.");
+        return;
+      }
+      const catQuestions = questions[currentCategory];
+      const randomIndex = Math.floor(Math.random() * catQuestions.length);
+      currentQuestion = catQuestions[randomIndex];
+
+      document.getElementById("questionText").innerText = currentQuestion.pergunta;
+      document.getElementById("answerText").style.display = 'none';
+    }
+
+    function showAnswer() {
+      if (!currentQuestion) {
+        alert("Você precisa sortear uma pergunta primeiro.");
+        return;
+      }
+      document.getElementById("answerText").innerText = `Resposta: ${currentQuestion.resposta}`;
+      document.getElementById("answerText").style.display = 'block';
+    }
+
+    function capitalize(text) {
+      const map = {
+        construcao: 'Construção Civil',
+        estruturas: 'Estruturas',
+        geotecnia: 'Geotecnia',
+        hidricos: 'Recursos Hídricos',
+        transportes: 'Transportes'
+      };
+      return map[text] || text;
+    }
+  </script>
+</body>
+</html>
